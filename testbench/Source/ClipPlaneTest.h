@@ -35,6 +35,8 @@ public:
 		zoom_value = juce::jlimit(0.001f, 10.0f, zoom_value);
 	}
 
+	void resized() override;
+
 private:
 	//todo: abstract all of this away (uniforms into their own class, camera stuff into a 
 	// "camera" class, etc)

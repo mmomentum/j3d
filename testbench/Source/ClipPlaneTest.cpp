@@ -186,3 +186,10 @@ void ClipPlaneTest::render()
 		room->render();
 	}
 }
+
+void ClipPlaneTest::resized()
+{
+	TestSceneBase::resized();
+
+	orientation.setViewport(getLocalBounds());
+}
