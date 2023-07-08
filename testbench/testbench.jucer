@@ -4,10 +4,21 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
   <MAINGROUP id="Mntsbc" name="testbench">
     <GROUP id="{251DF059-3C54-E25A-4476-0E808217A280}" name="j3d">
-      <FILE id="swfLpN" name="GLRenderer.cpp" compile="1" resource="0" file="../j3d/GLRenderer.cpp"/>
-      <FILE id="zmxlPW" name="GLRenderer.h" compile="0" resource="0" file="../j3d/GLRenderer.h"/>
+      <FILE id="BeNUwq" name="Camera.cpp" compile="1" resource="0" file="../j3d/Camera.cpp"/>
+      <FILE id="xBYDJT" name="Camera.h" compile="0" resource="0" file="../j3d/Camera.h"/>
+      <FILE id="SEPbhi" name="Common.h" compile="0" resource="0" file="../j3d/Common.h"/>
+      <FILE id="EyPjy9" name="Light.cpp" compile="1" resource="0" file="../j3d/Light.cpp"/>
+      <FILE id="hbNGkF" name="Light.h" compile="0" resource="0" file="../j3d/Light.h"/>
+      <FILE id="rZrY7j" name="Material.cpp" compile="1" resource="0" file="../j3d/Material.cpp"/>
+      <FILE id="LEc5f9" name="Material.h" compile="0" resource="0" file="../j3d/Material.h"/>
       <FILE id="pmaIry" name="Model.cpp" compile="1" resource="0" file="../j3d/Model.cpp"/>
       <FILE id="ALs8R2" name="Model.h" compile="0" resource="0" file="../j3d/Model.h"/>
+      <FILE id="OwaC3h" name="Program.cpp" compile="1" resource="0" file="../j3d/Program.cpp"/>
+      <FILE id="YnCEfL" name="Program.h" compile="0" resource="0" file="../j3d/Program.h"/>
+      <FILE id="uVSugC" name="Scene.cpp" compile="1" resource="0" file="../j3d/Scene.cpp"/>
+      <FILE id="rBl9Qg" name="Scene.h" compile="0" resource="0" file="../j3d/Scene.h"/>
+      <FILE id="bjzV3E" name="Texture.cpp" compile="1" resource="0" file="../j3d/Texture.cpp"/>
+      <FILE id="IJHPAl" name="Texture.h" compile="0" resource="0" file="../j3d/Texture.h"/>
     </GROUP>
     <GROUP id="{092F2A82-615B-EE96-9D11-C8DD9FF90753}" name="Source">
       <FILE id="ZSmMY4" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
