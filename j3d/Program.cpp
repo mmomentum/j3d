@@ -10,6 +10,51 @@
 
 #include "Program.h"
 
+//These shaders are loaded by the default constuctor:
+//You can't move them to the .h file without an error
+
+const char* sampleVertexShader = R"V0G0N(
+	#version 400 core
+
+	layout(location = 0) in vec3 vertexPosition;
+	layout(location = 1) in vec3 vertexNormal;
+
+	uniform mat4 cameraView;
+	uniform mat4 cameraProjection;
+	uniform float scale;
+	uniform bool isRay;
+	uniform vec3 clipPlaneDirection;
+	uniform float clipPlaneOffset;
+
+	out vec3 normal;
+
+	void main()
+	{
+		normal = vertexNormal;
+		gl_Position = cameraProjection * cameraView * vec4(scale * vertexPosition,1.0);
+
+		gl_ClipDistance[0] = clipPlaneOffset + clipPlaneDirection.x * vertexPosition.x +  clipPlaneDirection.y * vertexPosition.y +  clipPlaneDirection.z * vertexPosition.z;
+	}
+	)V0G0N";
+
+const char* sampleFragmentShader = R"V0G0N(
+	#version 400 core
+
+	uniform bool isRay;
+
+	in vec3 normal;
+
+	out vec4 color;
+
+	void main()
+	{
+		if(isRay)
+			color = vec4(1.0,0.0,0.0,1.0);	
+		else
+			color = vec4(0.0,0.0,1.0,1.0);
+	}
+	)V0G0N";
+
 program::program()
 {
     bool encounteredError = false;
@@ -118,20 +163,20 @@ bool program::loadShader(shaderFlags shaderType, const char* filePath)
         case fragmentShader: glShaderFlag = GL_FRAGMENT_SHADER;         arrayPos = 1; break;
         case tessEvalShader: glShaderFlag = GL_TESS_EVALUATION_SHADER;  arrayPos = 2; break;
         case tessCtrlShader: glShaderFlag = GL_TESS_CONTROL_SHADER;     arrayPos = 3; break;
-        default: DBG("Invalid shaderFlags enum."); return;
+        default: DBG("Invalid shaderFlags enum."); return true;
     }
 
     if (glIsShader(shaders[arrayPos]))
     {
         DBG("Tried to load same shader type for same program twice!");
-        return;
+        return true;
     }
 
     std::ifstream shaderFile(filePath, std::ios::ate | std::ios::binary);
     if (!shaderFile.is_open())
     {
         DBG("Could not open " + std::string(filePath) + " to load shader.");
-        return;
+        return true;
     }
 
     shaders[arrayPos] = glCreateShader(glShaderFlag);
@@ -167,7 +212,7 @@ bool program::loadShader(shaderFlags shaderType, const char* filePath)
         //I'm choosing to actually delete shaders that do not compile so you can try again to reload without creating a new program...
         glDeleteShader(shaders[arrayPos]);
         shaders[arrayPos] = 0;
-        return;
+        return true;
     }
 
     //Shader did not have an error...
@@ -177,7 +222,7 @@ bool program::loadShader(shaderFlags shaderType, const char* filePath)
 
     //Check to see if it's time to compile the program:
     if (compiledShaders != expectedShaders)
-        return;
+        return false;
 
     //Attach each compiled shader to the program:
     for (int a = 0; a < maxShaders; a++)
@@ -216,9 +261,12 @@ bool program::loadShader(shaderFlags shaderType, const char* filePath)
                 DBG("Could not retrieve program error log.");
             delete data;
         }
+        return true;
     }
     else
         valid = true;
+
+    return false;
 }
 
 program::~program()

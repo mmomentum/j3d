@@ -52,7 +52,7 @@ class program
         //Returns true on error
         bool loadShader(shaderFlags shaderType, const char* filePath);
 
-        inline const bool isValid() { return isValid; }
+        inline const bool isValid() { return valid; }
 		inline const void use() { glUseProgram(handle); }
 
 		inline const GLint getUniformLocation(const char* location) { return glGetUniformLocation(handle, location); }
@@ -64,49 +64,5 @@ class program
 		inline const void uniform1f(const char* location, float value) { glUniform1f(glGetUniformLocation(handle, location), value); }
 		inline const void uniform3f(const char* location, float x,float y,float z) { glUniform3f(glGetUniformLocation(handle, location), x,y,z); }
 		inline const void uniform4f(const char* location, float x, float y, float z,float w) { glUniform4f(glGetUniformLocation(handle, location), x, y, z,w); }
-		inline const void uniformMat(const char* location, glm::mat4 value) { glUniformMatrix4fv(glGetUniformLocation(handle, location), 1, GL_FALSE, &value[0][0]); }
+		inline const void uniformMat(const char* location, const glm::mat4 value) { glUniformMatrix4fv(glGetUniformLocation(handle, location), 1, GL_FALSE, &value[0][0]); }
 };
-
-//These shaders are loaded by the default constuctor:
-
-const char* sampleVertexShader = R"V0G0N(
-	#version 400 core
-
-	layout(location = 0) in vec3 vertexPosition;
-	layout(location = 1) in vec3 vertexNormal;
-
-	uniform mat4 cameraView;
-	uniform mat4 cameraProjection;
-	uniform float scale;
-	uniform bool isRay;
-	uniform vec3 clipPlaneDirection;
-	uniform float clipPlaneOffset;
-
-	out vec3 normal;
-
-	void main()
-	{
-		normal = vertexNormal;
-		gl_Position = cameraProjection * cameraView * vec4(scale * vertexPosition,1.0);
-
-		gl_ClipDistance[0] = clipPlaneOffset + clipPlaneDirection.x * vertexPosition.x +  clipPlaneDirection.y * vertexPosition.y +  clipPlaneDirection.z * vertexPosition.z;
-	}
-	)V0G0N";
-
-const char* sampleFragmentShader = R"V0G0N(
-	#version 400 core
-
-	uniform bool isRay;
-
-	in vec3 normal;
-
-	out vec4 color;
-
-	void main()
-	{
-		if(isRay)
-			color = vec4(1.0,0.0,0.0,1.0);	
-		else
-			color = vec4(0.0,0.0,1.0,1.0);
-	}
-	)V0G0N";

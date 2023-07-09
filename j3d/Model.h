@@ -1,8 +1,6 @@
 #pragma once
 
-#include <JuceHeader.h>
-
-#include <glm.hpp>
+#include "Common.h"
 
 // 3d model
 namespace j3d

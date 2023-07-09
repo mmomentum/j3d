@@ -11,6 +11,8 @@
       <FILE id="hbNGkF" name="Light.h" compile="0" resource="0" file="../j3d/Light.h"/>
       <FILE id="rZrY7j" name="Material.cpp" compile="1" resource="0" file="../j3d/Material.cpp"/>
       <FILE id="LEc5f9" name="Material.h" compile="0" resource="0" file="../j3d/Material.h"/>
+      <FILE id="DayrCb" name="Mesh.cpp" compile="1" resource="0" file="../j3d/Mesh.cpp"/>
+      <FILE id="NbQQMp" name="Mesh.h" compile="0" resource="0" file="../j3d/Mesh.h"/>
       <FILE id="pmaIry" name="Model.cpp" compile="1" resource="0" file="../j3d/Model.cpp"/>
       <FILE id="ALs8R2" name="Model.h" compile="0" resource="0" file="../j3d/Model.h"/>
       <FILE id="OwaC3h" name="Program.cpp" compile="1" resource="0" file="../j3d/Program.cpp"/>

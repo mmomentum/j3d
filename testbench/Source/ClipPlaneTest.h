@@ -1,12 +1,11 @@
 #pragma once
 
 #include "TestSceneBase.h"
-
 #include "../../j3d/Model.h"
+#include "../../j3d/Program.h"
+#include "../../j3d/Mesh.h"
 
 using namespace juce::gl;
-
-#include <../glm/gtx/transform.hpp>
 
 class ClipPlaneTest : public TestSceneBase
 {
@@ -40,7 +39,8 @@ public:
 private:
 	//todo: abstract all of this away (uniforms into their own class, camera stuff into a 
 	// "camera" class, etc)
-	GLuint program = 0;
+	program *mainShader = 0;
+	Mesh* testMesh = 0;
 
 	GLuint uniform_cameraView;
 	GLuint uniform_cameraScale;

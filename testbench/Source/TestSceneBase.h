@@ -2,10 +2,7 @@
 
 #include <JuceHeader.h>
 
-#include "../../j3d/GLRenderer.h"
-#include <glm.hpp>
-
-class TestSceneBase : public j3d::GLRenderer
+class TestSceneBase : public juce::OpenGLAppComponent
 {
 	class TestParameter
 	{
