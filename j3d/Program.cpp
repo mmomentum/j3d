@@ -27,11 +27,13 @@ const char* sampleVertexShader = R"V0G0N(
 	uniform float clipPlaneOffset;
 
 	out vec3 normal;
+    out vec3 worldPos;
 
 	void main()
 	{
 		normal = vertexNormal;
-		gl_Position = cameraProjection * cameraView * vec4(scale * vertexPosition,1.0);
+        worldPos = vertexPosition;
+		gl_Position = cameraProjection * cameraView * vec4(scale * worldPos,1.0);
 
 		gl_ClipDistance[0] = clipPlaneOffset + clipPlaneDirection.x * vertexPosition.x +  clipPlaneDirection.y * vertexPosition.y +  clipPlaneDirection.z * vertexPosition.z;
 	}
@@ -43,15 +45,23 @@ const char* sampleFragmentShader = R"V0G0N(
 	uniform bool isRay;
 
 	in vec3 normal;
+    in vec3 worldPos;
 
 	out vec4 color;
 
 	void main()
 	{
+        vec3 lightPos = vec3(8,10,5);
+        vec3 lightDir = normalize(worldPos-lightPos);
+        float cosTheta = clamp(dot(lightDir,normal),0.0,1.0);
+        cosTheta += 0.15;
+
 		if(isRay)
 			color = vec4(1.0,0.0,0.0,1.0);	
 		else
 			color = vec4(0.0,0.0,1.0,1.0);
+
+        color.rgb *= cosTheta;
 	}
 	)V0G0N";
 

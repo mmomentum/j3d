@@ -38,8 +38,8 @@ class Mesh
 
         //Create a basic cube mesh:
         Mesh();
-
-        //Create a mesh from raw data:
+        
+        //Create a mesh from raw data, needs to be triangles:
         Mesh(std::vector<glm::vec3> &positions);
         Mesh(std::vector<glm::vec3> &positions,std::vector<glm::vec3> &normals);
         Mesh(std::vector<glm::vec3> &positions, std::vector<glm::vec3> &normals,std::vector<glm::vec2> &uvs);

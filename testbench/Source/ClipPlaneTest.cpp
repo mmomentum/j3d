@@ -19,8 +19,8 @@ void ClipPlaneTest::initialise()
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 
-	glDisable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+	/*glDisable(GL_CULL_FACE);
+	glCullFace(GL_BACK);*/
 
 	uniform_cameraProjection = mainShader->getUniformLocation("cameraProjection");
 	uniform_cameraView = mainShader->getUniformLocation("cameraView");
@@ -32,13 +32,20 @@ void ClipPlaneTest::initialise()
 	//Creates a default/sample cube mesh:
 	testMesh = new Mesh();
 }
-
+ 
 void ClipPlaneTest::shutdown()
 {
+	shutdownOpenGL();
 }
 
 void ClipPlaneTest::render()
 {
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
+	glDisable(GL_CLIP_DISTANCE0);
+	glEnable(GL_DEPTH_TEST);
+
+	glClearColor(1, 0.5, 0.2, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	mainShader->use();
 

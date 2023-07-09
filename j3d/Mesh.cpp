@@ -125,6 +125,7 @@ Mesh::Mesh()
     float adjust = 0.5;
 
     std::vector<glm::vec3> cubeVerts;
+    std::vector<glm::vec3> cubeNormals;
 
     //Top
     cubeVerts.push_back(glm::vec3(-adjust, adjust, -adjust));
@@ -134,6 +135,9 @@ Mesh::Mesh()
     cubeVerts.push_back(glm::vec3(-adjust, adjust, adjust));
     cubeVerts.push_back(glm::vec3(-adjust, adjust, -adjust));
 
+    for (int a = 0; a < 6; a++)
+        cubeNormals.push_back({ 0,1,0 });
+
     //Right
     cubeVerts.push_back(glm::vec3(adjust, -adjust, -adjust));
     cubeVerts.push_back(glm::vec3(adjust, -adjust, adjust));
@@ -141,6 +145,9 @@ Mesh::Mesh()
     cubeVerts.push_back(glm::vec3(adjust, adjust, adjust));
     cubeVerts.push_back(glm::vec3(adjust, adjust, -adjust));
     cubeVerts.push_back(glm::vec3(adjust, -adjust, -adjust));
+
+    for (int a = 0; a < 6; a++)
+        cubeNormals.push_back({ 1,0,0 });
 
     //Left
     cubeVerts.push_back(glm::vec3(-adjust, adjust, adjust));
@@ -150,6 +157,9 @@ Mesh::Mesh()
     cubeVerts.push_back(glm::vec3(-adjust, -adjust, -adjust));
     cubeVerts.push_back(glm::vec3(-adjust, adjust, -adjust));
 
+    for (int a = 0; a < 6; a++)
+        cubeNormals.push_back({ -1,0,0 });
+
     //Front
     cubeVerts.push_back(glm::vec3(-adjust, -adjust, adjust));
     cubeVerts.push_back(glm::vec3(-adjust, adjust, adjust));
@@ -157,6 +167,9 @@ Mesh::Mesh()
     cubeVerts.push_back(glm::vec3(adjust, adjust, adjust));
     cubeVerts.push_back(glm::vec3(adjust, -adjust, adjust));
     cubeVerts.push_back(glm::vec3(-adjust, -adjust, adjust));
+
+    for (int a = 0; a < 6; a++)
+        cubeNormals.push_back({ 0,0,1 });
 
     //Back
     cubeVerts.push_back(glm::vec3(adjust, adjust, -adjust));
@@ -166,6 +179,9 @@ Mesh::Mesh()
     cubeVerts.push_back(glm::vec3(-adjust, -adjust, -adjust));
     cubeVerts.push_back(glm::vec3(adjust, -adjust, -adjust));
 
+    for (int a = 0; a < 6; a++)
+        cubeNormals.push_back({ 0,0,-1 });
+
     //Bottom
     cubeVerts.push_back(glm::vec3(-adjust, -adjust, -adjust));
     cubeVerts.push_back(glm::vec3(adjust, -adjust, -adjust));
@@ -174,14 +190,18 @@ Mesh::Mesh()
     cubeVerts.push_back(glm::vec3(-adjust, -adjust, adjust));
     cubeVerts.push_back(glm::vec3(-adjust, -adjust, -adjust));
 
+    for (int a = 0; a < 6; a++)
+        cubeNormals.push_back({ 0,-1,0 });
+
     //Allocate handles for the mesh in OpenGL:
     glCreateVertexArrays(1, &VAO);
-    glCreateBuffers(1, buffers);
+    glCreateBuffers(2, buffers);
 
     glBindVertexArray(VAO);
 
     numVerts = cubeVerts.size();
     initBuffer(&cubeVerts[0][0], cubeVerts.size() * sizeof(glm::vec3), 3, layout_vertex);
+    initBuffer(&cubeNormals[0][0], cubeNormals.size() * sizeof(glm::vec3), 3, layout_normal);
 
     glBindVertexArray(0);
 
@@ -197,7 +217,9 @@ void Mesh::render()
     if (!valid)
         return;
 
+    glPolygonMode(GL_FRONT_AND_BACK, drawWireframe ? GL_LINE : GL_FILL);
+
     glBindVertexArray(VAO);
-    glDrawArrays(drawWireframe ? GL_LINE_STRIP : GL_TRIANGLES, 0, numVerts);
+    glDrawArrays(GL_TRIANGLES, 0, numVerts);
     glBindVertexArray(0);
 }

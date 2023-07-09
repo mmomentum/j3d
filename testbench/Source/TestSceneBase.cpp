@@ -75,7 +75,7 @@ void TestSceneBase::ParameterComponent::resized()
 
 TestSceneBase::TestSceneBase()
 {
-
+    openGLContext.setMultisamplingEnabled(true); 
 }
 
 TestSceneBase::~TestSceneBase()
