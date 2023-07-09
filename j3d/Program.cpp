@@ -18,6 +18,7 @@ const char* sampleVertexShader = R"V0G0N(
 
 	layout(location = 0) in vec3 vertexPosition;
 	layout(location = 1) in vec3 vertexNormal;
+    layout(location = 2) in vec2 vertexUV;
 
 	uniform mat4 cameraView;
 	uniform mat4 cameraProjection;
@@ -28,9 +29,11 @@ const char* sampleVertexShader = R"V0G0N(
 
 	out vec3 normal;
     out vec3 worldPos;
+    out vec2 UV;
 
 	void main()
 	{
+        UV = vertexUV;
 		normal = vertexNormal;
         worldPos = vertexPosition;
 		gl_Position = cameraProjection * cameraView * vec4(scale * worldPos,1.0);
@@ -44,8 +47,13 @@ const char* sampleFragmentShader = R"V0G0N(
 
 	uniform bool isRay;
 
+    uniform sampler2D albedo;
+    uniform sampler2D normalMap;
+    uniform sampler2D mohrTexture;
+
 	in vec3 normal;
     in vec3 worldPos;
+    in vec2 UV;
 
 	out vec4 color;
 
@@ -56,14 +64,24 @@ const char* sampleFragmentShader = R"V0G0N(
         float cosTheta = clamp(dot(lightDir,normal),0.0,1.0);
         cosTheta += 0.15;
 
-		if(isRay)
+		/*if(isRay)
 			color = vec4(1.0,0.0,0.0,1.0);	
 		else
-			color = vec4(0.0,0.0,1.0,1.0);
+			color = vec4(0.0,0.0,1.0,1.0);*/
 
+        color.rgb = texture2D(albedo,UV).rgb;
         color.rgb *= cosTheta;
+        color.a = 1.0;
 	}
 	)V0G0N";
+
+const void program::use()
+{ 
+    for (int a = 0; a < textureBindNames::endOfEnum; a++)
+        glUniform1i(samplerUniformLoc[a], a);
+    
+    glUseProgram(handle); 
+}
 
 program::program()
 {
@@ -153,7 +171,13 @@ program::program()
         }
     }
     else
+    {
         valid = true;
+
+        samplerUniformLoc[0] = getUniformLocation("albedo");
+        samplerUniformLoc[1] = getUniformLocation("normalMap");
+        samplerUniformLoc[2] = getUniformLocation("mohrTexture");
+    }
 }
 
 program::program(shaderFlags shadersToLoad)

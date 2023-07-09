@@ -22,6 +22,15 @@ enum shaderFlags
     tessCtrlShader = 0b1000
 };
 
+//For use with glActiveTexture and passing ints to sampler2D shader uniforms:
+enum textureBindNames
+{
+    albedo = 0,
+    normalMap = 1,
+    mohr = 2,
+    endOfEnum = 3
+};
+
 class program
 {
     static const unsigned int maxShaders = 4;
@@ -32,6 +41,8 @@ class program
         bool valid = false;
         shaderFlags expectedShaders = noShaders;
 		shaderFlags compiledShaders = noShaders;
+
+        GLint samplerUniformLoc[textureBindNames::endOfEnum];
 
         //TODO: Expand later for geometry or compute shader?
 		GLuint shaders[maxShaders] = { 0,0,0,0 };
@@ -53,7 +64,7 @@ class program
         bool loadShader(shaderFlags shaderType, const char* filePath);
 
         inline const bool isValid() { return valid; }
-		inline const void use() { glUseProgram(handle); }
+        const void use();
 
 		inline const GLint getUniformLocation(const char* location) { return glGetUniformLocation(handle, location); }
 		

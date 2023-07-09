@@ -126,6 +126,18 @@ Mesh::Mesh()
 
     std::vector<glm::vec3> cubeVerts;
     std::vector<glm::vec3> cubeNormals;
+    std::vector<glm::vec2> cubeUVs;
+
+    //UVs are same for each face:
+    for(int a = 0; a<6; a++)
+    {
+        cubeUVs.push_back({ 0,0 });
+        cubeUVs.push_back({ 1,0 });
+        cubeUVs.push_back({ 1,1 });
+        cubeUVs.push_back({ 1,1 });
+        cubeUVs.push_back({ 0,1 });
+        cubeUVs.push_back({ 0,0 });
+    }
 
     //Top
     cubeVerts.push_back(glm::vec3(-adjust, adjust, -adjust));
@@ -195,13 +207,14 @@ Mesh::Mesh()
 
     //Allocate handles for the mesh in OpenGL:
     glCreateVertexArrays(1, &VAO);
-    glCreateBuffers(2, buffers);
+    glCreateBuffers(3, buffers);
 
     glBindVertexArray(VAO);
 
     numVerts = cubeVerts.size();
     initBuffer(&cubeVerts[0][0], cubeVerts.size() * sizeof(glm::vec3), 3, layout_vertex);
     initBuffer(&cubeNormals[0][0], cubeNormals.size() * sizeof(glm::vec3), 3, layout_normal);
+    initBuffer(&cubeUVs[0][0], cubeUVs.size() * sizeof(glm::vec2), 2, layout_uv);
 
     glBindVertexArray(0);
 

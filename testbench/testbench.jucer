@@ -3,6 +3,9 @@
 <JUCERPROJECT id="vYxbEi" name="testbench" projectType="guiapp" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
   <MAINGROUP id="Mntsbc" name="testbench">
+    <GROUP id="{31F8709B-5EB5-1B9B-DC2B-C1B85E4C262F}" name="depends">
+      <FILE id="q2AgBc" name="stb_image.h" compile="0" resource="0" file="depends/stb_image.h"/>
+    </GROUP>
     <GROUP id="{251DF059-3C54-E25A-4476-0E808217A280}" name="j3d">
       <FILE id="BeNUwq" name="Camera.cpp" compile="1" resource="0" file="../j3d/Camera.cpp"/>
       <FILE id="xBYDJT" name="Camera.h" compile="0" resource="0" file="../j3d/Camera.h"/>

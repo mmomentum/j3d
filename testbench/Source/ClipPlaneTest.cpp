@@ -31,6 +31,8 @@ void ClipPlaneTest::initialise()
 
 	//Creates a default/sample cube mesh:
 	testMesh = new Mesh();
+
+	testTexture = new Texture({ 100,100 });
 }
  
 void ClipPlaneTest::shutdown()
@@ -54,6 +56,8 @@ void ClipPlaneTest::render()
 	glUniformMatrix4fv(uniform_cameraView, 1, GL_FALSE, &matrix_cameraView[0][0]);
 	glUniform1f(uniform_cameraScale, zoom_value);
 
+	glActiveTexture(GL_TEXTURE0);
+	testTexture->bind();
 	testMesh->render();
 
 	/*if (recentlyRecreatedRoom)
