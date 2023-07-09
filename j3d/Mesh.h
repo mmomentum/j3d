@@ -30,7 +30,6 @@ class Mesh
         bool hasNormalBuffer = false;
         bool hasUVBuffer = false;
         bool valid = false;
-        bool drawWireframe = false;
 
         void initBuffer(const void* data, const int size, const int dimensions, const unsigned int layout);
 
@@ -52,7 +51,6 @@ class Mesh
         const inline bool hasUVs() { return hasUVBuffer; }
         const inline bool hasNormals() { return hasNormalBuffer; }
         const inline bool isValid() { return valid; }
-        inline void wireframeMode(bool useWireframe) { drawWireframe = useWireframe; }
 
         ~Mesh();
 };

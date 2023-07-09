@@ -11,6 +11,7 @@
 #pragma once
 
 #include "Common.h"
+#include "Program.h"
 
 //This file can only be included once in the whole project, and thus cannot go in common.h:
 /*#define STB_IMAGE_IMPLEMENTATION
@@ -35,13 +36,14 @@ class Texture
     public:
         //Generates a basic checkerboard test texture:
         Texture(glm::ivec2 dimensions, texturePrefs& desired = texturePrefs());
+        //Loads texture from a file:
+        Texture(const char* filename, texturePrefs& desired = texturePrefs());
 
         const inline unsigned int getWidth() { return width; }
         const inline unsigned int getHeight() { return height; }
         const inline bool isValid() { return valid; }
 
-        const inline void bind() { glBindTexture(GL_TEXTURE_2D, handle); }
+        const void bind(textureBindNames bindLocation);
 
         ~Texture();
-
 };

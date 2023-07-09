@@ -76,12 +76,22 @@ const char* sampleFragmentShader = R"V0G0N(
 	)V0G0N";
 
 const void program::use()
-{ 
+{
+    glUseProgram(handle);
+
     for (int a = 0; a < textureBindNames::endOfEnum; a++)
         glUniform1i(samplerUniformLoc[a], a);
-    
-    glUseProgram(handle); 
 }
+
+void program::findUniforms()
+{
+    uniform_clipPlaneDirection = getUniformLocation("clipPlaneDirection");
+    uniform_clipPlaneOffset = getUniformLocation("clipPlaneOffset");
+
+    samplerUniformLoc[albedo] = getUniformLocation("albedo");
+    samplerUniformLoc[normalMap] = getUniformLocation("normalMap");
+    samplerUniformLoc[mohr] = getUniformLocation("mohrTexture");
+} 
 
 program::program()
 {
@@ -174,9 +184,7 @@ program::program()
     {
         valid = true;
 
-        samplerUniformLoc[0] = getUniformLocation("albedo");
-        samplerUniformLoc[1] = getUniformLocation("normalMap");
-        samplerUniformLoc[2] = getUniformLocation("mohrTexture");
+        findUniforms();
     }
 }
 
@@ -299,6 +307,8 @@ bool program::loadShader(shaderFlags shaderType, const char* filePath)
     }
     else
         valid = true;
+
+    findUniforms();
 
     return false;
 }

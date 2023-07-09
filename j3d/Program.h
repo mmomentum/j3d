@@ -33,6 +33,8 @@ enum textureBindNames
 
 class program
 {
+    friend class Material;
+
     static const unsigned int maxShaders = 4;
 
     private:
@@ -42,10 +44,19 @@ class program
         shaderFlags expectedShaders = noShaders;
 		shaderFlags compiledShaders = noShaders;
 
-        GLint samplerUniformLoc[textureBindNames::endOfEnum];
+        GLint samplerUniformLoc[textureBindNames::endOfEnum] = { 0,0,0 };
 
         //TODO: Expand later for geometry or compute shader?
 		GLuint shaders[maxShaders] = { 0,0,0,0 };
+
+        //Called once when program is created:
+        void findUniforms();
+
+    protected:
+
+        //These are used by materials:
+        GLint uniform_clipPlaneDirection = -1;
+        GLint uniform_clipPlaneOffset = -1;
 
     public:
 

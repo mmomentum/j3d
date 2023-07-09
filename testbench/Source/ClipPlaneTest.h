@@ -4,7 +4,7 @@
 #include "../../j3d/Model.h"
 #include "../../j3d/Program.h"
 #include "../../j3d/Mesh.h"
-#include "../../j3d/Texture.h"
+#include "../../j3d/Material.h"
 
 using namespace juce::gl;
 
@@ -43,6 +43,7 @@ private:
 	program *mainShader = 0;
 	Mesh* testMesh = 0;
 	Texture* testTexture = 0;
+	Material testMaterial;
 
 	GLuint uniform_cameraView;
 	GLuint uniform_cameraScale;

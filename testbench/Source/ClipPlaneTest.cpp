@@ -2,13 +2,13 @@
 
 ClipPlaneTest::ClipPlaneTest()
 {
-	addTestParameter("clip", 0.0f, 1.0f, 0.5f);
+	addTestParameter("clip", -0.8f, 0.8f, 0.0f);
 	addTestParameter("anotherparam", 0.0f, 5.0f, 4.0f);
 }
 
 ClipPlaneTest::~ClipPlaneTest()
 {
-
+	shutdownOpenGL();
 }
 
 void ClipPlaneTest::initialise()
@@ -32,32 +32,38 @@ void ClipPlaneTest::initialise()
 	//Creates a default/sample cube mesh:
 	testMesh = new Mesh();
 
-	testTexture = new Texture({ 100,100 });
+	//testTexture = new Texture({ 100,100 });
+	testTexture = new Texture("G:\\2003-2008 hd one\\cshot2noa.png");
+	testMaterial.setTexture(testTexture, albedo);
+	testMaterial.enableClipping(glm::vec3(1.0,1.0,0.0), 0);
 }
  
 void ClipPlaneTest::shutdown()
 {
-	shutdownOpenGL();
+	//shutdownOpenGL();
 }
 
 void ClipPlaneTest::render()
 {
-	glDisable(GL_CULL_FACE);
-	glDisable(GL_BLEND);
-	glDisable(GL_CLIP_DISTANCE0);
+	testMaterial.enableClipping(glm::vec3(1.0, 1.0, 0.0), getTestParameter("clip").getValue());
+
+	//glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
 
 	glClearColor(1, 0.5, 0.2, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	mainShader->use();
 
 	glUniformMatrix4fv(uniform_cameraProjection, 1, GL_FALSE, &matrix_cameraProjection[0][0]);
 	memcpy(&matrix_cameraView, orientation.getRotationMatrix().mat, sizeof(float) * 16);
 	glUniformMatrix4fv(uniform_cameraView, 1, GL_FALSE, &matrix_cameraView[0][0]);
 	glUniform1f(uniform_cameraScale, zoom_value);
+	
+	testMaterial.render(mainShader);
 
-	glActiveTexture(GL_TEXTURE0);
-	testTexture->bind();
 	testMesh->render();
 
 	/*if (recentlyRecreatedRoom)
