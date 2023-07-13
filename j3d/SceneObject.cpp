@@ -10,25 +10,16 @@
 
 #include "SceneObject.h"
 
-const void meshObject::render(program* currentProgram)
+const void meshObject::render(program* currentProgram,glm::mat4 modelMatrix)
 {
-    if (toUse)
-        toUse->render(currentProgram);
+    if (theMaterial)
+        theMaterial->render(currentProgram);
+    modelMatrix = glm::toMat4(rotation) * modelMatrix;
+    modelMatrix = glm::translate(position) * modelMatrix;
+    currentProgram->setModelMatrix(modelMatrix);
+    if (theMesh)
+        theMesh->render();
 
-    for (int a = 0; a < meshes.size(); a++)
-    {
-        glm::mat4 modelMatrix = glm::toMat4(meshRotations[a]);
-        modelMatrix = glm::translate(meshPositions[a]) * modelMatrix;
-        modelMatrix = glm::toMat4(rotation) * modelMatrix;
-        modelMatrix = glm::translate(position) * modelMatrix;
-
-        currentProgram->setModelMatrix(modelMatrix);
-        meshes[a]->render();
-    }
-}
-
-const void lightObject::render(program* currentProgram)
-{
-    currentProgram->setLightPosition(position);
-    currentProgram->setLightColor(color);
+    for (int a = 0; a < children.size(); a++)
+        children[a]->render(currentProgram, modelMatrix);
 }

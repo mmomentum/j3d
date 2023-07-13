@@ -10,16 +10,23 @@
 
 #include "Camera.h"
 
+void camera::turn(float deltaYaw, float deltaPitch)
+{
+    lastYaw += deltaYaw;
+    lastPitch += deltaPitch;
+    lastYaw = fmod(lastYaw, 3.1415 * 2.0);
+    lastPitch = fmod(lastPitch, 3.1415 * 2.0);
+    direction = { sin(deltaYaw) * cos(deltaPitch),sin(deltaPitch),cos(deltaYaw) * cos(deltaPitch) };
+}
+
 const void perspectiveCamera::render(program* currentProgram)
 {
     currentProgram->matrix_cameraProjection = glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
-    glm::vec3 direction = glm::toMat4(rotation) * glm::vec4(0, 0, 1, 0);
     currentProgram->matrix_cameraView = glm::lookAt(position, position + direction, glm::vec3(0, 1, 0));
 }
 
 const void orthoCamera::render(program* currentProgram)
 {
-    currentProgram->matrix_cameraProjection = glm::ortho(near.x, near.y, near.z, far.x, far.y, far.z);
-    glm::vec3 direction = glm::toMat4(rotation) * glm::vec4(0, 0, 1, 0);
+    currentProgram->matrix_cameraProjection = glm::ortho(near.x, far.x, near.y, far.y, near.z, far.z);
     currentProgram->matrix_cameraView = glm::lookAt(position, position + direction, glm::vec3(0, 1, 0));
 }

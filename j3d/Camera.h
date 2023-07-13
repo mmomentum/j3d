@@ -13,7 +13,20 @@
 #include "Common.h"
 #include "Program.h"
 
-struct perspectiveCamera : sceneObject
+struct camera
+{
+    public:
+        float lastPitch = 0.0;
+        float lastYaw = 0.0;
+
+        glm::vec3 position = glm::vec3(0, 0, 0);
+        glm::vec3 direction = glm::vec3(0, 0, 1);
+
+        void turn(float deltaYaw, float deltaPitch);
+        virtual const void render(program *currentProgram) = 0;
+};
+
+struct perspectiveCamera : camera
 {
     //Degrees:
     float fov = 90.0;
@@ -24,7 +37,7 @@ struct perspectiveCamera : sceneObject
     const void render(program* currentProgram);
 };
 
-struct orthoCamera : sceneObject
+struct orthoCamera : camera
 {
     glm::vec3 near = glm::vec3(-10, -10, -10);
     glm::vec3 far = glm::vec3(10, 10, 10);

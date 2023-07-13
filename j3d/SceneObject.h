@@ -15,22 +15,13 @@
 #include "Material.h"
 #include "Mesh.h"
 
-struct meshObject : sceneObject
+struct meshObject
 {
-    Material* toUse = 0;
-    std::vector<Mesh*> meshes;
-    std::vector<glm::vec3> meshPositions;
-    std::vector<glm::quat> meshRotations;
+    glm::vec3 position = glm::vec3(0, 0, 0);
+    glm::quat rotation = glm::quat(1, 0, 0, 0);
+    Material* theMaterial = 0;
+    Mesh* theMesh = 0;
+    std::vector<meshObject*> children;
 
-    const void render(program *currentProgram);
-};
-
-struct lightObject : sceneObject
-{
-    glm::vec3 color = glm::vec3(1.0, 0.75, 0.25);
-    
-    bool coneLight = false;
-    float coneRadians = 3.1415;
-
-    const void render(program* currentProgram);
+    const void render(program *currentProgram,glm::mat4 modelMatrix = glm::mat4(1.0));
 };

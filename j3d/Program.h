@@ -70,7 +70,6 @@ class program
         GLuint uniform_isRay;
         glm::mat4 matrix_cameraProjection = glm::mat4(1.0);
         glm::mat4 matrix_cameraView = glm::mat4(1.0);
-        float zoom_value = 0.5f;
 
     public:
 
@@ -106,12 +105,4 @@ class program
         inline const void setModelMatrix(glm::mat4 modelMatrix) { glUniformMatrix4fv(uniform_modelMatrix, 1, GL_FALSE, &modelMatrix[0][0]); }
         inline const void setLightPosition(glm::vec3 lightPosition) { glUniform3f(uniform_lightPosition, lightPosition.x, lightPosition.y, lightPosition.z); }
         inline const void setLightColor(glm::vec3 lightColor) { glUniform3f(uniform_lightColor, lightColor.r, lightColor.g, lightColor.b); }
-};
-
-struct sceneObject
-{
-    glm::vec3 position = glm::vec3(0, 0, 0);
-    glm::quat rotation = glm::quat(1, 0, 0, 0);
-
-    virtual const void render(program* currentProgram) = 0;
 };

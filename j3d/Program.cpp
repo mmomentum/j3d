@@ -23,7 +23,6 @@ const char* sampleVertexShader = R"V0G0N(
     uniform mat4 modelMatrix;
 	uniform mat4 cameraView;
 	uniform mat4 cameraProjection;
-	uniform float scale;
 	uniform bool isRay;
 	uniform vec3 clipPlaneDirection;
 	uniform float clipPlaneOffset;
@@ -37,7 +36,7 @@ const char* sampleVertexShader = R"V0G0N(
         UV = vertexUV;
 		normal = vertexNormal;
         worldPos = (modelMatrix * vec4(vertexPosition,1.0)).xyz;
-		gl_Position = cameraProjection * cameraView * vec4(scale * worldPos,1.0);
+		gl_Position = cameraProjection * cameraView * vec4(worldPos,1.0);
 
 		gl_ClipDistance[0] = clipPlaneOffset + clipPlaneDirection.x * vertexPosition.x +  clipPlaneDirection.y * vertexPosition.y +  clipPlaneDirection.z * vertexPosition.z;
 	}
@@ -77,11 +76,21 @@ const void program::use()
     glUseProgram(handle);
 
     for (int a = 0; a < textureBindNames::endOfEnum; a++)
-        glUniform1i(samplerUniformLoc[a], a);
+    {
+        if (samplerUniformLoc[a] != -1)
+            glUniform1i(samplerUniformLoc[a], a);
+    }
+    
+    //If you don't have a camera in your shader you'll get spammed with these messages each frame
+    if (uniform_cameraProjection != -1)
+        glUniformMatrix4fv(uniform_cameraProjection, 1, GL_FALSE, &matrix_cameraProjection[0][0]);
+    else
+        DBG("Could not find uniform_cameraProjection");
 
-    glUniformMatrix4fv(uniform_cameraProjection, 1, GL_FALSE, &matrix_cameraProjection[0][0]);
-    glUniformMatrix4fv(uniform_cameraView, 1, GL_FALSE, &matrix_cameraView[0][0]);
-    glUniform1f(uniform_cameraScale, zoom_value);
+    if (uniform_cameraView != -1)
+        glUniformMatrix4fv(uniform_cameraView, 1, GL_FALSE, &matrix_cameraView[0][0]);
+    else
+        DBG("Could not find uniform_cameraView");
 }
 
 void program::findUniforms()
@@ -91,6 +100,8 @@ void program::findUniforms()
     uniform_modelMatrix = getUniformLocation("modelMatrix");
     uniform_lightPosition = getUniformLocation("lightPosition");
     uniform_lightColor = getUniformLocation("lightColor");
+    uniform_cameraProjection = getUniformLocation("cameraProjection");
+    uniform_cameraView = getUniformLocation("cameraView");
 
     samplerUniformLoc[albedo] = getUniformLocation("albedo");
     samplerUniformLoc[normalMap] = getUniformLocation("normalMap");
