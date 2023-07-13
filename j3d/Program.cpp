@@ -20,6 +20,7 @@ const char* sampleVertexShader = R"V0G0N(
 	layout(location = 1) in vec3 vertexNormal;
     layout(location = 2) in vec2 vertexUV;
 
+    uniform mat4 modelMatrix;
 	uniform mat4 cameraView;
 	uniform mat4 cameraProjection;
 	uniform float scale;
@@ -35,7 +36,7 @@ const char* sampleVertexShader = R"V0G0N(
 	{
         UV = vertexUV;
 		normal = vertexNormal;
-        worldPos = vertexPosition;
+        worldPos = (modelMatrix * vec4(vertexPosition,1.0)).xyz;
 		gl_Position = cameraProjection * cameraView * vec4(scale * worldPos,1.0);
 
 		gl_ClipDistance[0] = clipPlaneOffset + clipPlaneDirection.x * vertexPosition.x +  clipPlaneDirection.y * vertexPosition.y +  clipPlaneDirection.z * vertexPosition.z;
@@ -48,8 +49,10 @@ const char* sampleFragmentShader = R"V0G0N(
 	uniform bool isRay;
 
     uniform sampler2D albedo;
-    uniform sampler2D normalMap;
+    uniform sampler2D normalMap; 
     uniform sampler2D mohrTexture;
+    uniform vec3 lightPosition;
+    uniform vec3 lightColor;
 
 	in vec3 normal;
     in vec3 worldPos;
@@ -59,18 +62,12 @@ const char* sampleFragmentShader = R"V0G0N(
 
 	void main()
 	{
-        vec3 lightPos = vec3(8,10,5);
-        vec3 lightDir = normalize(worldPos-lightPos);
+        vec3 lightDir = normalize(worldPos-lightPosition);
         float cosTheta = clamp(dot(lightDir,normal),0.0,1.0);
         cosTheta += 0.15;
 
-		/*if(isRay)
-			color = vec4(1.0,0.0,0.0,1.0);	
-		else
-			color = vec4(0.0,0.0,1.0,1.0);*/
-
         color.rgb = texture2D(albedo,UV).rgb;
-        color.rgb *= cosTheta;
+        color.rgb *= cosTheta * lightColor;
         color.a = 1.0;
 	}
 	)V0G0N";
@@ -81,12 +78,19 @@ const void program::use()
 
     for (int a = 0; a < textureBindNames::endOfEnum; a++)
         glUniform1i(samplerUniformLoc[a], a);
+
+    glUniformMatrix4fv(uniform_cameraProjection, 1, GL_FALSE, &matrix_cameraProjection[0][0]);
+    glUniformMatrix4fv(uniform_cameraView, 1, GL_FALSE, &matrix_cameraView[0][0]);
+    glUniform1f(uniform_cameraScale, zoom_value);
 }
 
 void program::findUniforms()
 {
     uniform_clipPlaneDirection = getUniformLocation("clipPlaneDirection");
     uniform_clipPlaneOffset = getUniformLocation("clipPlaneOffset");
+    uniform_modelMatrix = getUniformLocation("modelMatrix");
+    uniform_lightPosition = getUniformLocation("lightPosition");
+    uniform_lightColor = getUniformLocation("lightColor");
 
     samplerUniformLoc[albedo] = getUniformLocation("albedo");
     samplerUniformLoc[normalMap] = getUniformLocation("normalMap");

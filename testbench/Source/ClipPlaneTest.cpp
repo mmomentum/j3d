@@ -14,7 +14,6 @@ ClipPlaneTest::~ClipPlaneTest()
 void ClipPlaneTest::initialise()
 {
 	//Use default/sample shaders
-	mainShader = new program();
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
@@ -22,20 +21,39 @@ void ClipPlaneTest::initialise()
 	/*glDisable(GL_CULL_FACE);
 	glCullFace(GL_BACK);*/
 
-	uniform_cameraProjection = mainShader->getUniformLocation("cameraProjection");
+	/*uniform_cameraProjection = mainShader->getUniformLocation("cameraProjection");
 	uniform_cameraView = mainShader->getUniformLocation("cameraView");
 	uniform_cameraScale = mainShader->getUniformLocation("scale");
 	uniform_isRay = mainShader->getUniformLocation("isRay");
 
-	matrix_cameraProjection = glm::ortho(-2.0, 2.0, -2.0, 2.0, -2.0, 10.0);
+	matrix_cameraProjection = glm::ortho(-2.0, 2.0, -2.0, 2.0, -2.0, 10.0);*/
 
+	testScene = new scene;
+	testScene->toUse = new program();
+
+	testScene->camera = new orthoCamera;
+	((orthoCamera*)testScene->camera)->near = glm::vec3(-2.0, -2.0, -2.0);
+	((orthoCamera*)testScene->camera)->far = glm::vec3(2.0, 2.0, 2.0);
+	((orthoCamera*)testScene->camera)->position = glm::vec3(0,0,-10);
+	((orthoCamera*)testScene->camera)->rotation = glm::quat(1.0, 0.0, 0.0, 0.0);
+
+	meshObject* cube = new meshObject; 
+	 
 	//Creates a default/sample cube mesh:
-	testMesh = new Mesh();
+	Mesh *testMesh = new Mesh();
 
 	//testTexture = new Texture({ 100,100 });
-	testTexture = new Texture("G:\\2003-2008 hd one\\cshot2noa.png");
-	testMaterial.setTexture(testTexture, albedo);
-	testMaterial.enableClipping(glm::vec3(1.0,1.0,0.0), 0);
+	Texture *testTexture = new Texture("G:\\2003-2008 hd one\\cshot2noa.png");
+	Material* testMaterial = new Material;
+	testMaterial->setTexture(testTexture, albedo);
+	testMaterial->enableClipping(glm::vec3(1.0,1.0,0.0), 0);
+
+	cube->toUse = testMaterial;
+	cube->meshes.push_back(testMesh);
+	cube->meshPositions.push_back({0,0,0});
+	cube->meshRotations.push_back({1,0,0,0});
+
+	testScene->scene.push_back(cube);
 }
  
 void ClipPlaneTest::shutdown()
@@ -45,7 +63,8 @@ void ClipPlaneTest::shutdown()
 
 void ClipPlaneTest::render()
 {
-	testMaterial.enableClipping(glm::vec3(1.0, 1.0, 0.0), getTestParameter("clip").getValue());
+	//if (scene.size() > 0)
+		//scene[0]->toUse->enableClipping(glm::vec3(1.0, 1.0, 0.0), getTestParameter("clip").getValue());
 
 	//glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
@@ -55,16 +74,7 @@ void ClipPlaneTest::render()
 	glClearColor(1, 0.5, 0.2, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	mainShader->use();
-
-	glUniformMatrix4fv(uniform_cameraProjection, 1, GL_FALSE, &matrix_cameraProjection[0][0]);
-	memcpy(&matrix_cameraView, orientation.getRotationMatrix().mat, sizeof(float) * 16);
-	glUniformMatrix4fv(uniform_cameraView, 1, GL_FALSE, &matrix_cameraView[0][0]);
-	glUniform1f(uniform_cameraScale, zoom_value);
-	
-	testMaterial.render(mainShader);
-
-	testMesh->render();
+	testScene->render(); 
 
 	/*if (recentlyRecreatedRoom)
 	{

@@ -19,8 +19,4 @@
 
 using namespace juce::gl;
 
-struct object3D
-{
-    glm::vec3 position = glm::vec3(0, 0, 0);
-    glm::quat rotation = glm::quat(1, 0, 0, 0);
-};
+ 
