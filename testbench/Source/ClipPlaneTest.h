@@ -8,7 +8,7 @@
 
 using namespace juce::gl;
 
-class ClipPlaneTest : public TestSceneBase
+class ClipPlaneTest : public TestSceneBase, juce::KeyListener
 {
 public:
 	ClipPlaneTest();
@@ -19,14 +19,30 @@ public:
 	virtual void shutdown() override;
 	virtual void render() override;
 
-	void mouseDown(const juce::MouseEvent& e) override
+	bool keyStateChanged(bool isKeyDown, Component* asdf) override
 	{
-		orientation.mouseDown(e.getPosition());
+		if (!cameraForwardKeyDown  && juce::KeyPress::isKeyCurrentlyDown(juce::KeyPress::numberPad8))
+		{
+			cameraForwardKeyDown = true;
+			return true;
+		}
+
+		if (cameraForwardKeyDown && !juce::KeyPress::isKeyCurrentlyDown(juce::KeyPress::numberPad8))
+		{
+			cameraForwardKeyDown = false;
+			return true;
+		}
+
+		return false;
+	}
+
+	void mouseUp(const juce::MouseEvent& e) override
+	{
+		theCamera->endTurn();
 	}
 
 	void mouseDrag(const juce::MouseEvent& e) override
 	{
-		orientation.mouseDrag(e.getPosition());
 		theCamera->turn(e.getDistanceFromDragStartX() * 0.003, e.getDistanceFromDragStartY() * 0.003);
 	}
 
@@ -39,6 +55,9 @@ public:
 	void resized() override;
 
 private:
+
+	bool cameraForwardKeyDown = false;
+
 	program* theProgram = 0;
 	camera* theCamera = 0;
 	glm::vec3 lightColor = { 1,1,1 };

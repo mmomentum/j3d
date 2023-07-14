@@ -40,7 +40,7 @@ void ClipPlaneTest::initialise()
 	Mesh* testMesh = new Mesh();
 
 	//testTexture = new Texture({ 100,100 });
-	Texture* testTexture = new Texture("G:\\2003-2008 hd one\\cshot2noa.png");
+	Texture* testTexture = new Texture({100,100});// ("G:\\2003-2008 hd one\\cshot2noa.png");
 	Material* testMaterial = new Material;
 	testMaterial->setTexture(testTexture, albedo);
 	testMaterial->disableClipping();
@@ -51,6 +51,8 @@ void ClipPlaneTest::initialise()
 	cube->position = { 0,0,0 };
 	cube->rotation = { 1,0,0,0 };
 	scene.push_back(cube);
+
+	setWantsKeyboardFocus(true);
 }
  
 void ClipPlaneTest::shutdown()
@@ -61,7 +63,10 @@ void ClipPlaneTest::shutdown()
 void ClipPlaneTest::render()
 {
 	//if (scene.size() > 0)
-		//scene[0]->toUse->enableClipping(glm::vec3(1.0, 1.0, 0.0), getTestParameter("clip").getValue());
+		//scene[0]->toUse->enableClipping(glm::vec3(1.0, 1.0, 0.0), getTestParameter("clip").getValue());\
+
+	if (cameraForwardKeyDown)
+		theCamera->moveForward(0.01);
 
 	//glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);

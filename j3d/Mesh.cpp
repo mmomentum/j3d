@@ -232,6 +232,11 @@ Mesh::Mesh()
         DBG("Error creating vertex array object for Mesh.");
 }
 
+Mesh::Mesh(const char* filename)
+{
+
+}
+
 void Mesh::render()
 {
     if (!valid)
