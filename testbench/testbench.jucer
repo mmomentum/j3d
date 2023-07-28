@@ -10,8 +10,6 @@
       <FILE id="BeNUwq" name="Camera.cpp" compile="1" resource="0" file="../j3d/Camera.cpp"/>
       <FILE id="xBYDJT" name="Camera.h" compile="0" resource="0" file="../j3d/Camera.h"/>
       <FILE id="SEPbhi" name="Common.h" compile="0" resource="0" file="../j3d/Common.h"/>
-      <FILE id="EyPjy9" name="Light.cpp" compile="1" resource="0" file="../j3d/Light.cpp"/>
-      <FILE id="hbNGkF" name="Light.h" compile="0" resource="0" file="../j3d/Light.h"/>
       <FILE id="rZrY7j" name="Material.cpp" compile="1" resource="0" file="../j3d/Material.cpp"/>
       <FILE id="LEc5f9" name="Material.h" compile="0" resource="0" file="../j3d/Material.h"/>
       <FILE id="DayrCb" name="Mesh.cpp" compile="1" resource="0" file="../j3d/Mesh.cpp"/>
@@ -20,12 +18,12 @@
       <FILE id="ALs8R2" name="Model.h" compile="0" resource="0" file="../j3d/Model.h"/>
       <FILE id="OwaC3h" name="Program.cpp" compile="1" resource="0" file="../j3d/Program.cpp"/>
       <FILE id="YnCEfL" name="Program.h" compile="0" resource="0" file="../j3d/Program.h"/>
-      <FILE id="uVSugC" name="Scene.cpp" compile="1" resource="0" file="../j3d/Scene.cpp"/>
-      <FILE id="rBl9Qg" name="Scene.h" compile="0" resource="0" file="../j3d/Scene.h"/>
       <FILE id="carBtb" name="SceneObject.cpp" compile="1" resource="0" file="../j3d/SceneObject.cpp"/>
       <FILE id="uvMQII" name="SceneObject.h" compile="0" resource="0" file="../j3d/SceneObject.h"/>
       <FILE id="bjzV3E" name="Texture.cpp" compile="1" resource="0" file="../j3d/Texture.cpp"/>
       <FILE id="IJHPAl" name="Texture.h" compile="0" resource="0" file="../j3d/Texture.h"/>
+      <FILE id="BctjGf" name="WavefrontObjFile.h" compile="0" resource="0"
+            file="../j3d/WavefrontObjFile.h"/>
     </GROUP>
     <GROUP id="{092F2A82-615B-EE96-9D11-C8DD9FF90753}" name="Source">
       <FILE id="ZSmMY4" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>

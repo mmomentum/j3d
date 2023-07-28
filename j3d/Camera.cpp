@@ -17,30 +17,20 @@ void camera::moveForward(float amount)
 
 void camera::moveRight(float amount)
 {
-    glm::vec3 rightDirection = { sin(lastYaw + (3.1415 / 2.0)) * cos(lastPitch),sin(lastPitch),cos(lastYaw + (3.1415 / 2.0)) * cos(lastPitch) };
+    glm::vec3 rightDirection = { sin(yaw + (3.1415 / 2.0)) * cos(pitch),sin(pitch),cos(yaw + (3.1415 / 2.0)) * cos(pitch) };
     position += amount * rightDirection;
-}
-
-void camera::endTurn()
-{
-    lastYaw += yawSinceTurn;
-    lastPitch = pitchSinceTurn;
-    yawSinceTurn = 0;
-    pitchSinceTurn = 0;
-
-    /*lastYaw = fmod(lastYaw, 3.1415 * 2.0);
-    lastPitch = fmod(lastPitch, 3.1415 * 2.0);*/
-    if (fabs(lastYaw) > 6.28)
-        lastYaw += (lastYaw > 0) ? -6.28 : 6.28;
-    if (fabs(lastPitch) > 6.28)
-        lastPitch += (lastPitch > 0) ? -6.28 : 6.28;
 }
 
 void camera::turn(float deltaYaw, float deltaPitch)
 {
-    yawSinceTurn = deltaYaw;
-    pitchSinceTurn = deltaPitch;
-    direction = { sin(lastYaw+yawSinceTurn) * cos(lastPitch+pitchSinceTurn),sin(lastPitch + pitchSinceTurn),cos(lastYaw + yawSinceTurn) * cos(lastPitch + pitchSinceTurn) };
+    yaw += deltaYaw;
+    pitch += deltaPitch;
+
+    if (fabs(yaw) > 6.28)
+        yaw += (yaw > 0) ? -6.28 : 6.28;
+    if (fabs(pitch) > 6.28)
+        pitch += (pitch > 0) ? -6.28 : 6.28;
+    direction = { sin(yaw) * cos(pitch),sin(pitch),cos(yaw) * cos(pitch) };
 }
 
 const void perspectiveCamera::render(program* currentProgram)

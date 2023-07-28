@@ -43,7 +43,7 @@ class Mesh
         Mesh(std::vector<glm::vec3> &positions,std::vector<glm::vec3> &normals);
         Mesh(std::vector<glm::vec3> &positions, std::vector<glm::vec3> &normals,std::vector<glm::vec2> &uvs);
 
-        //Load a mesh from a file using Assimp
+        //Load a mesh from a file using default juce wavefront obj loader
         Mesh(const char* filePath);
 
         void render();
