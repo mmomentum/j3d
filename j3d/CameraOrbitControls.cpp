@@ -21,12 +21,12 @@ void CameraOrbitControls::updatePosition()
 
 	camera_.position = glm::vec3(x, y, z) * zoom_distance_;
 
-	auto dir = glm::lookAt(camera_.position, { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f });
-
+	//auto dir = glm::lookAt(camera_.position, { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f });
+	//momentum is a silly goose
 	//extract direction vector & normalize
-	auto dir_vect = glm::vec3(-dir[2][0], -dir[2][1], -dir[2][2]);
+	//auto dir_vect = glm::vec3(-dir[2][0], -dir[2][1], -dir[2][2]);
 
-	camera_.direction = dir_vect;
+	camera_.direction = -glm::vec3(x, y, z);
 }
 
 void CameraOrbitControls::mouseDrag(const juce::MouseEvent& event)
@@ -39,6 +39,8 @@ void CameraOrbitControls::mouseWheelMove(const juce::MouseEvent& e, const juce::
 	zoom_distance_ -= d.deltaY;
 
 	zoom_distance_ = juce::jlimit(0.1f, 100.0f, zoom_distance_);
+
+	DBG(zoom_distance_);
 
 	updatePosition();
 }
@@ -71,6 +73,12 @@ bool CameraOrbitControls::keyPressed(const juce::KeyPress& key, juce::Component*
 
 		return_state = true;
 	}
+
+	elevation = std::clamp(elevation, 0.01f, 180.0f);
+	while (azimuth > 360.0)
+		azimuth -= 360.0;
+	while (azimuth < 0)
+		azimuth += 360.0;
 
 	updatePosition();
 

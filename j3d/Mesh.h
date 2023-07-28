@@ -11,6 +11,7 @@
 #pragma once
 
 #include "Common.h"
+#include "../j3d/WavefrontObjFile.h"
 
 enum layoutPositions 
 { 
@@ -26,10 +27,14 @@ class Mesh
         GLuint VAO = 0;
         //Vertex, normal, uv:
         GLuint buffers[3] = { 0,0,0 };
+        //Special index buffer:
+        GLuint indexBuffer;
+
         int numVerts = 0;
         bool hasNormalBuffer = false;
         bool hasUVBuffer = false;
         bool valid = false;
+        bool isIndexed = false;
 
         void initBuffer(const void* data, const int size, const int dimensions, const unsigned int layout);
 
@@ -44,7 +49,8 @@ class Mesh
         Mesh(std::vector<glm::vec3> &positions, std::vector<glm::vec3> &normals,std::vector<glm::vec2> &uvs);
 
         //Load a mesh from a file using default juce wavefront obj loader
-        Mesh(const char* filePath);
+        //It's just a mesh, not a whole model, so shapeIdx can be used to select which mesh if a file contains multiple
+        Mesh(const char* filePath, unsigned int shapeIdx = 0);
 
         void render();
 
