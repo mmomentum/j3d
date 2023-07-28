@@ -33,8 +33,8 @@ void ClipPlaneTest::initialise()
 	theCamera = new orthoCamera;
 	((orthoCamera*)theCamera)->near = glm::vec3(-1.0, -1.0, -1.0);
 	((orthoCamera*)theCamera)->far = glm::vec3(1.0, 1.0, 1.0);
-	((orthoCamera*)theCamera)->position = glm::vec3(0, 0, -1);
-	((orthoCamera*)theCamera)->direction = glm::vec3(0, 0, 1);
+
+	orbit_controls = new CameraOrbitControls(*theCamera, *this);
 
 	//Creates a default/sample cube mesh:
 	Mesh* testMesh = new Mesh();
@@ -62,12 +62,6 @@ void ClipPlaneTest::shutdown()
 
 void ClipPlaneTest::render()
 {
-	//if (scene.size() > 0)
-		//scene[0]->toUse->enableClipping(glm::vec3(1.0, 1.0, 0.0), getTestParameter("clip").getValue());\
-
-	if (cameraForwardKeyDown)
-		theCamera->moveForward(0.01);
-
 	//glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glEnable(GL_DEPTH_TEST);

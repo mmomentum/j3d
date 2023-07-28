@@ -9,6 +9,10 @@
     <GROUP id="{251DF059-3C54-E25A-4476-0E808217A280}" name="j3d">
       <FILE id="BeNUwq" name="Camera.cpp" compile="1" resource="0" file="../j3d/Camera.cpp"/>
       <FILE id="xBYDJT" name="Camera.h" compile="0" resource="0" file="../j3d/Camera.h"/>
+      <FILE id="LVWkw3" name="CameraOrbitControls.cpp" compile="1" resource="0"
+            file="../j3d/CameraOrbitControls.cpp"/>
+      <FILE id="cf9ks4" name="CameraOrbitControls.h" compile="0" resource="0"
+            file="../j3d/CameraOrbitControls.h"/>
       <FILE id="SEPbhi" name="Common.h" compile="0" resource="0" file="../j3d/Common.h"/>
       <FILE id="rZrY7j" name="Material.cpp" compile="1" resource="0" file="../j3d/Material.cpp"/>
       <FILE id="LEc5f9" name="Material.h" compile="0" resource="0" file="../j3d/Material.h"/>
@@ -42,7 +46,7 @@
   <EXPORTFORMATS>
     <VS2022 targetFolder="Builds/MomentumExporter">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="testbench" headerPath="D:\programming\cpp\plugins\lib\glm"/>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="testbench" headerPath="D:\programming\cpp\plugins\lib"/>
         <CONFIGURATION isDebug="0" name="Release" targetName="testbench" headerPath="D:\programming\cpp\plugins\lib\glm"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
@@ -70,8 +74,7 @@
         <MODULEPATH id="juce_opengl" path="D:\programming\cpp\JUCE\modules"/>
       </MODULEPATHS>
     </VS2022>
-    <CODEBLOCKS_WINDOWS targetFolder="G:\github\j3d\testbench\Builds\CodeBlocksWindows"
-                        extraCompilerFlags="-Wa,-mbig-obj">
+    <CODEBLOCKS_WINDOWS extraCompilerFlags="-Wa,-mbig-obj">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" headerPath="C:\Program Files\CodeBlocks\MinGW\include\GL&#10;C:\Program Files\CodeBlocks\MinGW\include\glm&#10;"/>
         <CONFIGURATION isDebug="0" name="Release" headerPath="C:\Program Files\CodeBlocks\MinGW\include\GL&#10;C:\Program Files\CodeBlocks\MinGW\include\glm&#10;"/>
