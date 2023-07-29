@@ -28,7 +28,7 @@ public:
 	Texture(glm::ivec2 dimensions, texturePrefs& desired = texturePrefs());
 
 	// Loads a texture from a juce::Image
-	Texture(juce::Image image, texturePrefs& desired = texturePrefs());
+	Texture(juce::Image& image, texturePrefs& desired = texturePrefs());
 
 	// Loads a texture from a filepath
 	Texture(const char* filename, texturePrefs& desired = texturePrefs());

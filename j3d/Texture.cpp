@@ -93,14 +93,9 @@ Texture::Texture(glm::ivec2 dimensions, texturePrefs& desired) : settings(desire
 	valid = true;
 }
 
-const void Texture::bind(textureBindNames bindLocation)
-{
-	glActiveTexture(GL_TEXTURE0 + bindLocation);
-	glBindTexture(GL_TEXTURE_2D, handle);
-}
-
 Texture::Texture(const char* filename, texturePrefs& desired) : settings(desired)
 {
+	settings = desired;
 	glGenTextures(1, &handle);
 
 	juce::Image source = juce::ImageFileFormat::loadFrom(juce::File(filename));
@@ -111,18 +106,96 @@ Texture::Texture(const char* filename, texturePrefs& desired) : settings(desired
 		return;
 	}
 
-	Texture(source, desired);
+	if (source.isSingleChannel())
+		settings.channels = 1;
+	else if (source.isRGB())
+		settings.channels = 3;
+	else if (source.isARGB())
+		settings.channels = 4;
+	else
+	{
+		DBG("Invalid format / channels from loaded image!");
+		return;
+	}
+
+	width = source.getWidth();
+	height = source.getHeight();
+
+	glBindTexture(GL_TEXTURE_2D, handle);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, settings.wrapS);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, settings.wrapT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, settings.magFilter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, settings.minFilter);
+
+	auto bitmapData = juce::Image::BitmapData(source, juce::Image::BitmapData::ReadWriteMode::readOnly);
+	glTexImage2D(GL_TEXTURE_2D, 0, formatEnum(settings.channels), width, height, 0, formatEnum(settings.channels, true), GL_UNSIGNED_BYTE, bitmapData.data);
+
+	if (settings.minFilter == GL_LINEAR_MIPMAP_LINEAR ||
+		settings.minFilter == GL_NEAREST_MIPMAP_NEAREST ||
+		settings.minFilter == GL_LINEAR_MIPMAP_NEAREST ||
+		settings.minFilter == GL_NEAREST_MIPMAP_LINEAR)
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	valid = true;
 }
 
 Texture::Texture(const char* binary_data, const int binary_data_size, texturePrefs& desired) : settings(desired)
 {
+	settings = desired;
+	glGenTextures(1, &handle);
+
 	juce::Image image = juce::ImageCache::getFromMemory(binary_data, binary_data_size);
 
-	Texture(image, desired);
+	if (!image.isValid())
+	{
+		DBG("Binary Data does not create a valid image.");
+		return;
+	}
+
+	if (image.isSingleChannel())
+		settings.channels = 1;
+	else if (image.isRGB())
+		settings.channels = 3;
+	else if (image.isARGB())
+		settings.channels = 4;
+	else
+	{
+		DBG("Invalid format / channels from loaded image!");
+		return;
+	}
+
+	width = image.getWidth();
+	height = image.getHeight();
+
+	glBindTexture(GL_TEXTURE_2D, handle);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, settings.wrapS);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, settings.wrapT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, settings.magFilter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, settings.minFilter);
+
+	auto bitmapData = juce::Image::BitmapData(image, juce::Image::BitmapData::ReadWriteMode::readOnly);
+	glTexImage2D(GL_TEXTURE_2D, 0, formatEnum(settings.channels), width, height, 0, formatEnum(settings.channels, true), GL_UNSIGNED_BYTE, bitmapData.data);
+
+	if (settings.minFilter == GL_LINEAR_MIPMAP_LINEAR ||
+		settings.minFilter == GL_NEAREST_MIPMAP_NEAREST ||
+		settings.minFilter == GL_LINEAR_MIPMAP_NEAREST ||
+		settings.minFilter == GL_NEAREST_MIPMAP_LINEAR)
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	valid = true;
 }
 
-Texture::Texture(juce::Image source, texturePrefs& desired) : settings(desired)
+Texture::Texture(juce::Image& source, texturePrefs& desired) : settings(desired)
 {
+	settings = desired;
+	glGenTextures(1, &handle);
+
 	// source should not be 0 width or height!
 	jassert(source.getWidth() != 0 || source.getHeight() != 0);
 
@@ -165,4 +238,10 @@ Texture::Texture(juce::Image source, texturePrefs& desired) : settings(desired)
 Texture::~Texture()
 {
 	glDeleteTextures(1, &handle);
+}
+
+const void Texture::bind(textureBindNames bindLocation)
+{
+	glActiveTexture(GL_TEXTURE0 + bindLocation);
+	glBindTexture(GL_TEXTURE_2D, handle);
 }
