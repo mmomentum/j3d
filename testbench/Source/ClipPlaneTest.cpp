@@ -1,5 +1,9 @@
 #include "ClipPlaneTest.h"
 
+#include "../../j3d/Geometries/GeometryCube.h"
+#include "../../j3d/Geometries/GeometryCylinder.h"
+#include "../../j3d/Geometries/GeometryCone.h"
+
 ClipPlaneTest::ClipPlaneTest()
 {
 	addTestParameter("clip", -0.8f, 0.8f, 0.0f);
@@ -39,10 +43,11 @@ void ClipPlaneTest::initialise()
 	orbit_controls = new CameraOrbitControls(*theCamera, *this);
 
 	//Creates a default/sample cube mesh:
-	Mesh* testMesh = new Mesh("G:/github/j3d/testbench/Builds/DrenExporter/x64/Debug/App/teapot.obj");
+
+	Mesh* testMesh = new Mesh(GeometryCone::create());
 
 	//testTexture = new Texture({ 100,100 });
-	Texture* testTexture = new Texture({100,100});
+	Texture* testTexture = new Texture(BinaryData::map_png, BinaryData::map_pngSize);
 	//Texture *testTexture = new Texture("G:/2003-2008 hd one/cshot2noa.png");
 	Material* testMaterial = new Material;
 	testMaterial->setTexture(testTexture, albedo);

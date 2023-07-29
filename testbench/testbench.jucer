@@ -3,10 +3,27 @@
 <JUCERPROJECT id="vYxbEi" name="testbench" projectType="guiapp" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
   <MAINGROUP id="Mntsbc" name="testbench">
-    <GROUP id="{31F8709B-5EB5-1B9B-DC2B-C1B85E4C262F}" name="depends">
-      <FILE id="q2AgBc" name="stb_image.h" compile="0" resource="0" file="depends/stb_image.h"/>
-    </GROUP>
     <GROUP id="{251DF059-3C54-E25A-4476-0E808217A280}" name="j3d">
+      <GROUP id="{E4FEB09F-1672-365C-18F7-F742A6C97FF8}" name="Geometries">
+        <FILE id="CgQwyj" name="GeometryCone.cpp" compile="1" resource="0"
+              file="../j3d/Geometries/GeometryCone.cpp"/>
+        <FILE id="yBdhr1" name="GeometryCone.h" compile="0" resource="0" file="../j3d/Geometries/GeometryCone.h"/>
+        <FILE id="vtrRsN" name="GeometryCube.cpp" compile="1" resource="0"
+              file="../j3d/Geometries/GeometryCube.cpp"/>
+        <FILE id="X7SIFN" name="GeometryCube.h" compile="0" resource="0" file="../j3d/Geometries/GeometryCube.h"/>
+        <FILE id="Eaoy08" name="GeometryCylinder.cpp" compile="1" resource="0"
+              file="../j3d/Geometries/GeometryCylinder.cpp"/>
+        <FILE id="wBosRj" name="GeometryCylinder.h" compile="0" resource="0"
+              file="../j3d/Geometries/GeometryCylinder.h"/>
+        <FILE id="kgzSxb" name="GeometryIcosahedron.cpp" compile="1" resource="0"
+              file="../j3d/Geometries/GeometryIcosahedron.cpp"/>
+        <FILE id="FFGN13" name="GeometryIcosahedron.h" compile="0" resource="0"
+              file="../j3d/Geometries/GeometryIcosahedron.h"/>
+        <FILE id="baQAwL" name="GeometryPolyhedron.cpp" compile="1" resource="0"
+              file="../j3d/Geometries/GeometryPolyhedron.cpp"/>
+        <FILE id="rgSoVB" name="GeometryPolyhedron.h" compile="0" resource="0"
+              file="../j3d/Geometries/GeometryPolyhedron.h"/>
+      </GROUP>
       <FILE id="BeNUwq" name="Camera.cpp" compile="1" resource="0" file="../j3d/Camera.cpp"/>
       <FILE id="xBYDJT" name="Camera.h" compile="0" resource="0" file="../j3d/Camera.h"/>
       <FILE id="LVWkw3" name="CameraOrbitControls.cpp" compile="1" resource="0"
@@ -28,6 +45,9 @@
       <FILE id="IJHPAl" name="Texture.h" compile="0" resource="0" file="../j3d/Texture.h"/>
       <FILE id="BctjGf" name="WavefrontObjFile.h" compile="0" resource="0"
             file="../j3d/WavefrontObjFile.h"/>
+    </GROUP>
+    <GROUP id="{2F2A6C57-AEA2-4754-CB36-1114E889CD9B}" name="Resources">
+      <FILE id="GAeu6K" name="map.png" compile="0" resource="1" file="Resources/map.png"/>
     </GROUP>
     <GROUP id="{092F2A82-615B-EE96-9D11-C8DD9FF90753}" name="Source">
       <FILE id="ZSmMY4" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
