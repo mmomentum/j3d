@@ -21,11 +21,6 @@ void CameraOrbitControls::updatePosition()
 
 	camera_.position = glm::vec3(x, y, z) * zoom_distance_;
 
-	//auto dir = glm::lookAt(camera_.position, { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f });
-	//momentum is a silly goose
-	//extract direction vector & normalize
-	//auto dir_vect = glm::vec3(-dir[2][0], -dir[2][1], -dir[2][2]);
-
 	camera_.direction = -glm::vec3(x, y, z);
 }
 
