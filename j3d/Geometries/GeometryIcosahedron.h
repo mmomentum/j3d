@@ -2,9 +2,7 @@
 
 #include "../Mesh.h"
 
-#include "GeometryPolyhedron.h"
-
-struct GeometryIcosahedron : public GeometryPolyhedron
+struct GeometryIcosahedron
 {
 	static Mesh::Geometry create(float radius, unsigned int detail);
 };

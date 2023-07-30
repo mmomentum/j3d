@@ -19,10 +19,13 @@
               file="../j3d/Geometries/GeometryIcosahedron.cpp"/>
         <FILE id="FFGN13" name="GeometryIcosahedron.h" compile="0" resource="0"
               file="../j3d/Geometries/GeometryIcosahedron.h"/>
-        <FILE id="baQAwL" name="GeometryPolyhedron.cpp" compile="1" resource="0"
-              file="../j3d/Geometries/GeometryPolyhedron.cpp"/>
-        <FILE id="rgSoVB" name="GeometryPolyhedron.h" compile="0" resource="0"
-              file="../j3d/Geometries/GeometryPolyhedron.h"/>
+        <FILE id="G9VXx3" name="GeometrySphere.cpp" compile="1" resource="0"
+              file="../j3d/Geometries/GeometrySphere.cpp"/>
+        <FILE id="fQY8Ue" name="GeometrySphere.h" compile="0" resource="0"
+              file="../j3d/Geometries/GeometrySphere.h"/>
+        <FILE id="yebVqX" name="GeometryTorus.cpp" compile="1" resource="0"
+              file="../j3d/Geometries/GeometryTorus.cpp"/>
+        <FILE id="LT2pa9" name="GeometryTorus.h" compile="0" resource="0" file="../j3d/Geometries/GeometryTorus.h"/>
       </GROUP>
       <FILE id="BeNUwq" name="Camera.cpp" compile="1" resource="0" file="../j3d/Camera.cpp"/>
       <FILE id="xBYDJT" name="Camera.h" compile="0" resource="0" file="../j3d/Camera.h"/>

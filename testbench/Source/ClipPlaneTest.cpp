@@ -3,6 +3,9 @@
 #include "../../j3d/Geometries/GeometryCube.h"
 #include "../../j3d/Geometries/GeometryCylinder.h"
 #include "../../j3d/Geometries/GeometryCone.h"
+#include "../../j3d/Geometries/GeometryIcosahedron.h"
+#include "../../j3d/Geometries/GeometrySphere.h"
+#include "../../j3d/Geometries/GeometryTorus.h"
 
 ClipPlaneTest::ClipPlaneTest()
 {
@@ -44,7 +47,7 @@ void ClipPlaneTest::initialise()
 
 	//Creates a default/sample cube mesh:
 
-	Mesh* testMesh = new Mesh(GeometryCone::create());
+	Mesh* testMesh = new Mesh(GeometryTorus::create());
 
 	//testTexture = new Texture({ 100,100 });
 	Texture* testTexture = new Texture(BinaryData::map_png, BinaryData::map_pngSize);
