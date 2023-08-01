@@ -28,7 +28,8 @@ enum textureBindNames
     albedo = 0,
     normalMap = 1,
     mohr = 2,
-    endOfEnum = 3
+    matCap = 3,
+    endOfEnum = 4
 };
 
 class program
@@ -67,9 +68,13 @@ class program
         GLuint uniform_cameraView;
         GLuint uniform_cameraScale;
         GLuint uniform_cameraProjection;
+        GLuint uniform_cameraPosition;
+        GLuint uniform_cameraDirection;
         GLuint uniform_isRay;
         glm::mat4 matrix_cameraProjection = glm::mat4(1.0);
         glm::mat4 matrix_cameraView = glm::mat4(1.0);
+        glm::vec3 cameraPosition = glm::vec3(0, 0, 0);
+        glm::vec3 cameraDirection = glm::vec3(0, 1, 0);
 
     public:
 

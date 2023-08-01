@@ -47,21 +47,33 @@ void ClipPlaneTest::initialise()
 
 	//Creates a default/sample cube mesh:
 
-	Mesh* testMesh = new Mesh(GeometryTorus::create());
+	Mesh* testMesh = new Mesh("G:/github/j3d/testbench/Builds/DrenExporter/teapot.obj");
 
 	//testTexture = new Texture({ 100,100 });
 	Texture* testTexture = new Texture(BinaryData::map_png, BinaryData::map_pngSize);
 	//Texture *testTexture = new Texture("G:/2003-2008 hd one/cshot2noa.png");
 	Material* testMaterial = new Material;
 	testMaterial->setTexture(testTexture, albedo);
-	testMaterial->disableClipping();
+	//testMaterial->enableClipping(glm::normalize(glm::vec3(1, 1, 0)), 0);
 
-	meshObject* cube = new meshObject;
+	Material* secondMaterial = new Material;
+	secondMaterial->setTexture(new Texture(glm::ivec2(200,200)), albedo);
+
+	ourMatCap = new Texture(BinaryData::goldmatcap_jpg, BinaryData::goldmatcap_jpgSize);
+	/*meshObject* cube = new meshObject;
 	cube->theMaterial = testMaterial;
 	cube->theMesh = testMesh;
 	cube->position = { 0,0,0 };
 	cube->rotation = { 1,0,0,0 };
-	scene.push_back(cube);
+	scene.push_back(cube);*/
+
+	meshInstance* ghost = new meshInstance;
+	ghost->scale = glm::vec3(0.3, 0.3, 0.3);
+	ghost->theMaterial = testMaterial;
+	ghost->add(testMesh)->add(testMesh, glm::vec3(5, 0, 0))->add(testMesh,glm::vec3(5,0,0))->add(testMesh, glm::vec3(5, 0, 0));
+	ghost->add(testMesh, glm::vec3(0, 0, 5), glm::quat(glm::vec3(glm::radians(45.0),0,0)));
+	ghost->add(testMesh)->add(testMesh, glm::vec3(0, 5, 0),glm::quat(1,0,0,0),secondMaterial);
+	scene.push_back(ghost);
 
 	setWantsKeyboardFocus(true);
 }
@@ -83,6 +95,9 @@ void ClipPlaneTest::render()
 
 	theCamera->render(theProgram);
 	theProgram->use();
+
+	ourMatCap->bind(matCap);
+
 	theProgram->setLightColor(lightColor);
 	theProgram->setLightPosition(lightPosition);
 	for (int a = 0; a < scene.size(); a++)

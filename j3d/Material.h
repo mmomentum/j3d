@@ -22,7 +22,7 @@ class Material
         bool textureUsed[3] = { false,false,false };
         glm::vec3 clipPlaneDirection = glm::vec3(1.0, 1.0, 0);
         float clipOffset = 0.5;
-        bool doClipping = true;
+        bool doClipping = false;
 
     public:
 

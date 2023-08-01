@@ -6,19 +6,19 @@ GLenum formatEnum(unsigned int channels, bool flip = false)
 	{
 		switch (channels)
 		{
-		case 1: return GL_RED;
-		case 2: return GL_RG;
-		case 3: return GL_BGR;
-		case 4: return GL_BGRA;
+			case 1: return GL_RED;
+			case 2: return GL_RG;
+			case 3: return GL_BGR;
+			case 4: return GL_BGRA;
 		}
 	}
 
 	switch (channels)
 	{
-	case 1: return GL_RED;
-	case 2: return GL_RG;
-	case 3: return GL_RGB;
-	case 4: return GL_RGBA;
+		case 1: return GL_RED;
+		case 2: return GL_RG;
+		case 3: return GL_RGB;
+		case 4: return GL_RGBA;
 	}
 }
 

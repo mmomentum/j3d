@@ -37,10 +37,14 @@ const void perspectiveCamera::render(program* currentProgram)
 {
     currentProgram->matrix_cameraProjection = glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
     currentProgram->matrix_cameraView = glm::lookAt(position, position + direction, glm::vec3(0, 1, 0));
+    currentProgram->cameraPosition = position;
+    currentProgram->cameraDirection = direction;
 }
 
 const void orthoCamera::render(program* currentProgram)
 {
     currentProgram->matrix_cameraProjection = glm::ortho(near.x, far.x, near.y, far.y, near.z, far.z);
     currentProgram->matrix_cameraView = glm::lookAt(position, position + direction, glm::vec3(0, 1, 0));
+    currentProgram->cameraPosition = position;
+    currentProgram->cameraDirection = direction;
 }

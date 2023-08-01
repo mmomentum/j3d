@@ -25,11 +25,12 @@ public:
 
 private:
 
+	Texture* ourMatCap = 0;
 	program* theProgram = 0;
 	camera* theCamera = 0;
 	glm::vec3 lightColor = { 1,1,1 };
 	glm::vec3 lightPosition = { 10,7,5 };
-	std::vector<meshObject*> scene;
+	std::vector<meshInstance*> scene;
 
 	CameraOrbitControls* orbit_controls;
 

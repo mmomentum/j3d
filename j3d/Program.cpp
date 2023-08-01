@@ -34,7 +34,7 @@ const char* sampleVertexShader = R"V0G0N(
 	void main()
 	{
         UV = vertexUV;
-		normal = vertexNormal;
+		normal = normalize((modelMatrix * vec4(vertexNormal,0.0)).xyz);
         worldPos = (modelMatrix * vec4(vertexPosition,1.0)).xyz;
 		gl_Position = cameraProjection * cameraView * vec4(worldPos,1.0);
 
@@ -50,14 +50,23 @@ const char* sampleFragmentShader = R"V0G0N(
     uniform sampler2D albedo;
     uniform sampler2D normalMap; 
     uniform sampler2D mohrTexture;
+    uniform sampler2D matcapTexture;
     uniform vec3 lightPosition;
     uniform vec3 lightColor;
-
-	in vec3 normal;
+    uniform vec3 cameraPosition;
+    uniform vec3 cameraDirection;
+ 
+	in vec3 normal; 
     in vec3 worldPos;
     in vec2 UV;
 
 	out vec4 color;
+
+    vec2 matcap(vec3 eye, vec3 normal) {
+      vec3 reflected = reflect(eye, normal);
+      float m = 2.8284271247461903 * sqrt( reflected.z+1.0 );
+      return reflected.xy / m + 0.5; 
+    }
 
 	void main()
 	{
@@ -68,6 +77,9 @@ const char* sampleFragmentShader = R"V0G0N(
         color.rgb = texture2D(albedo,UV).rgb;
         color.rgb *= cosTheta * lightColor;
         color.a = 1.0;
+
+        color.rgb = texture(matcapTexture,matcap(normalize(worldPos-cameraPosition),normal)).rgb;
+        //color.rgb = reflect(normalize(worldPos-cameraPosition),normal);
 	}
 	)V0G0N";
 
@@ -91,6 +103,16 @@ const void program::use()
         glUniformMatrix4fv(uniform_cameraView, 1, GL_FALSE, &matrix_cameraView[0][0]);
     else
         DBG("Could not find uniform_cameraView");
+
+    if (uniform_cameraPosition != -1)
+        glUniform3f(uniform_cameraPosition, cameraPosition.x, cameraPosition.y, cameraPosition.z);
+    else
+        DBG("Could not find uniform_cameraPosition");
+
+    if (uniform_cameraDirection != -1)
+        glUniform3f(uniform_cameraDirection, cameraDirection.x, cameraDirection.y, cameraDirection.z);
+    else
+        DBG("Could not find uniform_cameraDirection");
 }
 
 void program::findUniforms()
@@ -102,10 +124,13 @@ void program::findUniforms()
     uniform_lightColor = getUniformLocation("lightColor");
     uniform_cameraProjection = getUniformLocation("cameraProjection");
     uniform_cameraView = getUniformLocation("cameraView");
+    uniform_cameraPosition = getUniformLocation("cameraPosition");
+    uniform_cameraDirection = getUniformLocation("cameraDirection");
 
     samplerUniformLoc[albedo] = getUniformLocation("albedo");
     samplerUniformLoc[normalMap] = getUniformLocation("normalMap");
     samplerUniformLoc[mohr] = getUniformLocation("mohrTexture");
+    samplerUniformLoc[matCap] = getUniformLocation("matcapTexture");
 } 
 
 program::program()
