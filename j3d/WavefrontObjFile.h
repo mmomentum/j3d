@@ -26,343 +26,349 @@ using namespace juce;
 
 //==============================================================================
 /**
-    This is a quick-and-dirty parser for the 3D OBJ file format.
+	This is a quick-and-dirty parser for the 3D OBJ file format.
 
-    Just call load() and if there aren't any errors, the 'shapes' array should
-    be filled with all the shape objects that were loaded from the file.
+	Just call load() and if there aren't any errors, the 'shapes' array should
+	be filled with all the shape objects that were loaded from the file.
 */
 class WavefrontObjFile
 {
 public:
-    WavefrontObjFile() {}
+	WavefrontObjFile() {}
 
-    Result load(const String& objFileContent)
-    {
-        shapes.clear();
-        return parseObjFile(StringArray::fromLines(objFileContent));
-    }
+	Result load(const String& objFileContent)
+	{
+		shapes.clear();
+		return parseObjFile(StringArray::fromLines(objFileContent));
+	}
 
-    Result load(const File& file)
-    {
-        sourceFile = file;
-        return load(file.loadFileAsString());
-    }
+	Result load(const File& file)
+	{
+		sourceFile = file;
+		return load(file.loadFileAsString());
+	}
 
-    //==============================================================================
-    typedef juce::uint32 Index;
+	Result load(const char* binaryData, const int binaryDataSize)
+	{
+		shapes.clear();
+		return parseObjFile(juce::StringArray::fromLines(binaryData));
+	}
 
-    struct Vertex { float x, y, z; };
-    struct TextureCoord { float x, y; };
+	//==============================================================================
+	typedef juce::uint32 Index;
 
-    struct Mesh
-    {
-        Array<Vertex> vertices, normals;
-        Array<TextureCoord> textureCoords;
-        Array<Index> indices;
-    };
+	struct Vertex { float x, y, z; };
+	struct TextureCoord { float x, y; };
 
-    struct Material
-    {
-        Material() noexcept
-        {
-            zerostruct(ambient);
-            zerostruct(diffuse);
-            zerostruct(specular);
-            zerostruct(transmittance);
-            zerostruct(emission);
-        }
+	struct Mesh
+	{
+		Array<Vertex> vertices, normals;
+		Array<TextureCoord> textureCoords;
+		Array<Index> indices;
+	};
 
-        String name;
+	struct Material
+	{
+		Material() noexcept
+		{
+			zerostruct(ambient);
+			zerostruct(diffuse);
+			zerostruct(specular);
+			zerostruct(transmittance);
+			zerostruct(emission);
+		}
 
-        Vertex ambient, diffuse, specular, transmittance, emission;
-        float shininess = 1.0f, refractiveIndex = 0.0f;
+		String name;
 
-        String ambientTextureName, diffuseTextureName,
-            specularTextureName, normalTextureName;
+		Vertex ambient, diffuse, specular, transmittance, emission;
+		float shininess = 1.0f, refractiveIndex = 0.0f;
 
-        StringPairArray parameters;
-    };
+		String ambientTextureName, diffuseTextureName,
+			specularTextureName, normalTextureName;
 
-    struct Shape
-    {
-        String name;
-        Mesh mesh;
-        Material material;
-    };
+		StringPairArray parameters;
+	};
 
-    OwnedArray<Shape> shapes;
+	struct Shape
+	{
+		String name;
+		Mesh mesh;
+		Material material;
+	};
+
+	OwnedArray<Shape> shapes;
 
 private:
-    //==============================================================================
-    File sourceFile;
+	//==============================================================================
+	File sourceFile;
 
-    struct TripleIndex
-    {
-        TripleIndex() noexcept {}
+	struct TripleIndex
+	{
+		TripleIndex() noexcept {}
 
-        bool operator< (const TripleIndex& other) const noexcept
-        {
-            if (this == &other)
-                return false;
+		bool operator< (const TripleIndex& other) const noexcept
+		{
+			if (this == &other)
+				return false;
 
-            if (vertexIndex != other.vertexIndex)
-                return vertexIndex < other.vertexIndex;
+			if (vertexIndex != other.vertexIndex)
+				return vertexIndex < other.vertexIndex;
 
-            if (textureIndex != other.textureIndex)
-                return textureIndex < other.textureIndex;
+			if (textureIndex != other.textureIndex)
+				return textureIndex < other.textureIndex;
 
-            return normalIndex < other.normalIndex;
-        }
+			return normalIndex < other.normalIndex;
+		}
 
-        int vertexIndex = -1, textureIndex = -1, normalIndex = -1;
-    };
+		int vertexIndex = -1, textureIndex = -1, normalIndex = -1;
+	};
 
-    struct IndexMap
-    {
-        std::map<TripleIndex, Index> map;
+	struct IndexMap
+	{
+		std::map<TripleIndex, Index> map;
 
-        Index getIndexFor(TripleIndex i, Mesh& newMesh, const Mesh& srcMesh)
-        {
-            const std::map<TripleIndex, Index>::iterator it(map.find(i));
+		Index getIndexFor(TripleIndex i, Mesh& newMesh, const Mesh& srcMesh)
+		{
+			const std::map<TripleIndex, Index>::iterator it(map.find(i));
 
-            if (it != map.end())
-                return it->second;
+			if (it != map.end())
+				return it->second;
 
-            auto index = (Index)newMesh.vertices.size();
+			auto index = (Index)newMesh.vertices.size();
 
-            if (isPositiveAndBelow(i.vertexIndex, srcMesh.vertices.size()))
-                newMesh.vertices.add(srcMesh.vertices.getReference(i.vertexIndex));
+			if (isPositiveAndBelow(i.vertexIndex, srcMesh.vertices.size()))
+				newMesh.vertices.add(srcMesh.vertices.getReference(i.vertexIndex));
 
-            if (isPositiveAndBelow(i.normalIndex, srcMesh.normals.size()))
-                newMesh.normals.add(srcMesh.normals.getReference(i.normalIndex));
+			if (isPositiveAndBelow(i.normalIndex, srcMesh.normals.size()))
+				newMesh.normals.add(srcMesh.normals.getReference(i.normalIndex));
 
-            if (isPositiveAndBelow(i.textureIndex, srcMesh.textureCoords.size()))
-                newMesh.textureCoords.add(srcMesh.textureCoords.getReference(i.textureIndex));
+			if (isPositiveAndBelow(i.textureIndex, srcMesh.textureCoords.size()))
+				newMesh.textureCoords.add(srcMesh.textureCoords.getReference(i.textureIndex));
 
-            map[i] = index;
-            return index;
-        }
-    };
+			map[i] = index;
+			return index;
+		}
+	};
 
-    static float parseFloat(String::CharPointerType& t)
-    {
-        t.incrementToEndOfWhitespace();
-        return (float)CharacterFunctions::readDoubleValue(t);
-    }
+	static float parseFloat(String::CharPointerType& t)
+	{
+		t.incrementToEndOfWhitespace();
+		return (float)CharacterFunctions::readDoubleValue(t);
+	}
 
-    static Vertex parseVertex(String::CharPointerType t)
-    {
-        Vertex v;
-        v.x = parseFloat(t);
-        v.y = parseFloat(t);
-        v.z = parseFloat(t);
-        return v;
-    }
+	static Vertex parseVertex(String::CharPointerType t)
+	{
+		Vertex v;
+		v.x = parseFloat(t);
+		v.y = parseFloat(t);
+		v.z = parseFloat(t);
+		return v;
+	}
 
-    static TextureCoord parseTextureCoord(String::CharPointerType t)
-    {
-        TextureCoord tc;
-        tc.x = parseFloat(t);
-        tc.y = parseFloat(t);
-        return tc;
-    }
+	static TextureCoord parseTextureCoord(String::CharPointerType t)
+	{
+		TextureCoord tc;
+		tc.x = parseFloat(t);
+		tc.y = parseFloat(t);
+		return tc;
+	}
 
-    static bool matchToken(String::CharPointerType& t, const char* token)
-    {
-        auto len = (int)strlen(token);
+	static bool matchToken(String::CharPointerType& t, const char* token)
+	{
+		auto len = (int)strlen(token);
 
-        if (CharacterFunctions::compareUpTo(CharPointer_ASCII(token), t, len) == 0)
-        {
-            auto end = t + len;
+		if (CharacterFunctions::compareUpTo(CharPointer_ASCII(token), t, len) == 0)
+		{
+			auto end = t + len;
 
-            if (end.isEmpty() || end.isWhitespace())
-            {
-                t = end.findEndOfWhitespace();
-                return true;
-            }
-        }
+			if (end.isEmpty() || end.isWhitespace())
+			{
+				t = end.findEndOfWhitespace();
+				return true;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    struct Face
-    {
-        Face(String::CharPointerType t)
-        {
-            while (!t.isEmpty())
-                triples.add(parseTriple(t));
-        }
+	struct Face
+	{
+		Face(String::CharPointerType t)
+		{
+			while (!t.isEmpty())
+				triples.add(parseTriple(t));
+		}
 
-        Array<TripleIndex> triples;
+		Array<TripleIndex> triples;
 
-        void addIndices(Mesh& newMesh, const Mesh& srcMesh, IndexMap& indexMap)
-        {
-            TripleIndex i0(triples[0]), i1, i2(triples[1]);
+		void addIndices(Mesh& newMesh, const Mesh& srcMesh, IndexMap& indexMap)
+		{
+			TripleIndex i0(triples[0]), i1, i2(triples[1]);
 
-            for (auto i = 2; i < triples.size(); ++i)
-            {
-                i1 = i2;
-                i2 = triples.getReference(i);
+			for (auto i = 2; i < triples.size(); ++i)
+			{
+				i1 = i2;
+				i2 = triples.getReference(i);
 
-                newMesh.indices.add(indexMap.getIndexFor(i0, newMesh, srcMesh));
-                newMesh.indices.add(indexMap.getIndexFor(i1, newMesh, srcMesh));
-                newMesh.indices.add(indexMap.getIndexFor(i2, newMesh, srcMesh));
-            }
-        }
+				newMesh.indices.add(indexMap.getIndexFor(i0, newMesh, srcMesh));
+				newMesh.indices.add(indexMap.getIndexFor(i1, newMesh, srcMesh));
+				newMesh.indices.add(indexMap.getIndexFor(i2, newMesh, srcMesh));
+			}
+		}
 
-        static TripleIndex parseTriple(String::CharPointerType& t)
-        {
-            TripleIndex i;
+		static TripleIndex parseTriple(String::CharPointerType& t)
+		{
+			TripleIndex i;
 
-            t.incrementToEndOfWhitespace();
-            i.vertexIndex = t.getIntValue32() - 1;
-            t = findEndOfFaceToken(t);
+			t.incrementToEndOfWhitespace();
+			i.vertexIndex = t.getIntValue32() - 1;
+			t = findEndOfFaceToken(t);
 
-            if (t.isEmpty() || t.getAndAdvance() != '/')
-                return i;
+			if (t.isEmpty() || t.getAndAdvance() != '/')
+				return i;
 
-            if (*t == '/')
-            {
-                ++t;
-            }
-            else
-            {
-                i.textureIndex = t.getIntValue32() - 1;
-                t = findEndOfFaceToken(t);
+			if (*t == '/')
+			{
+				++t;
+			}
+			else
+			{
+				i.textureIndex = t.getIntValue32() - 1;
+				t = findEndOfFaceToken(t);
 
-                if (t.isEmpty() || t.getAndAdvance() != '/')
-                    return i;
-            }
+				if (t.isEmpty() || t.getAndAdvance() != '/')
+					return i;
+			}
 
-            i.normalIndex = t.getIntValue32() - 1;
-            t = findEndOfFaceToken(t);
-            return i;
-        }
+			i.normalIndex = t.getIntValue32() - 1;
+			t = findEndOfFaceToken(t);
+			return i;
+		}
 
-        static String::CharPointerType findEndOfFaceToken(String::CharPointerType t) noexcept
-        {
-            return CharacterFunctions::findEndOfToken(t, CharPointer_ASCII("/ \t"), String().getCharPointer());
-        }
-    };
+		static String::CharPointerType findEndOfFaceToken(String::CharPointerType t) noexcept
+		{
+			return CharacterFunctions::findEndOfToken(t, CharPointer_ASCII("/ \t"), String().getCharPointer());
+		}
+	};
 
-    static Shape* parseFaceGroup(const Mesh& srcMesh,
-        Array<Face>& faceGroup,
-        const Material& material,
-        const String& name)
-    {
-        if (faceGroup.size() == 0)
-            return nullptr;
+	static Shape* parseFaceGroup(const Mesh& srcMesh,
+		Array<Face>& faceGroup,
+		const Material& material,
+		const String& name)
+	{
+		if (faceGroup.size() == 0)
+			return nullptr;
 
-        std::unique_ptr<Shape> shape(new Shape());
-        shape->name = name;
-        shape->material = material;
+		std::unique_ptr<Shape> shape(new Shape());
+		shape->name = name;
+		shape->material = material;
 
-        IndexMap indexMap;
+		IndexMap indexMap;
 
-        for (auto& f : faceGroup)
-            f.addIndices(shape->mesh, srcMesh, indexMap);
+		for (auto& f : faceGroup)
+			f.addIndices(shape->mesh, srcMesh, indexMap);
 
-        return shape.release();
-    }
+		return shape.release();
+	}
 
-    Result parseObjFile(const StringArray& lines)
-    {
-        Mesh mesh;
-        Array<Face> faceGroup;
+	Result parseObjFile(const StringArray& lines)
+	{
+		Mesh mesh;
+		Array<Face> faceGroup;
 
-        Array<Material> knownMaterials;
-        Material lastMaterial;
-        String lastName;
+		Array<Material> knownMaterials;
+		Material lastMaterial;
+		String lastName;
 
-        for (auto lineNum = 0; lineNum < lines.size(); ++lineNum)
-        {
-            auto l = lines[lineNum].getCharPointer().findEndOfWhitespace();
+		for (auto lineNum = 0; lineNum < lines.size(); ++lineNum)
+		{
+			auto l = lines[lineNum].getCharPointer().findEndOfWhitespace();
 
-            if (matchToken(l, "v")) { mesh.vertices.add(parseVertex(l));       continue; }
-            if (matchToken(l, "vn")) { mesh.normals.add(parseVertex(l));       continue; }
-            if (matchToken(l, "vt")) { mesh.textureCoords.add(parseTextureCoord(l)); continue; }
-            if (matchToken(l, "f")) { faceGroup.add(Face(l));              continue; }
+			if (matchToken(l, "v")) { mesh.vertices.add(parseVertex(l));       continue; }
+			if (matchToken(l, "vn")) { mesh.normals.add(parseVertex(l));       continue; }
+			if (matchToken(l, "vt")) { mesh.textureCoords.add(parseTextureCoord(l)); continue; }
+			if (matchToken(l, "f")) { faceGroup.add(Face(l));              continue; }
 
-            if (matchToken(l, "usemtl"))
-            {
-                auto name = String(l).trim();
+			if (matchToken(l, "usemtl"))
+			{
+				auto name = String(l).trim();
 
-                for (auto i = knownMaterials.size(); --i >= 0;)
-                {
-                    if (knownMaterials.getReference(i).name == name)
-                    {
-                        lastMaterial = knownMaterials.getReference(i);
-                        break;
-                    }
-                }
+				for (auto i = knownMaterials.size(); --i >= 0;)
+				{
+					if (knownMaterials.getReference(i).name == name)
+					{
+						lastMaterial = knownMaterials.getReference(i);
+						break;
+					}
+				}
 
-                continue;
-            }
+				continue;
+			}
 
-            if (matchToken(l, "mtllib"))
-            {
-                auto r = parseMaterial(knownMaterials, String(l).trim());
-                continue;
-            }
+			if (matchToken(l, "mtllib"))
+			{
+				auto r = parseMaterial(knownMaterials, String(l).trim());
+				continue;
+			}
 
-            if (matchToken(l, "g") || matchToken(l, "o"))
-            {
-                if (auto* shape = parseFaceGroup(mesh, faceGroup, lastMaterial, lastName))
-                    shapes.add(shape);
+			if (matchToken(l, "g") || matchToken(l, "o"))
+			{
+				if (auto* shape = parseFaceGroup(mesh, faceGroup, lastMaterial, lastName))
+					shapes.add(shape);
 
-                faceGroup.clear();
-                lastName = StringArray::fromTokens(l, " \t", "")[0];
-                continue;
-            }
-        }
+				faceGroup.clear();
+				lastName = StringArray::fromTokens(l, " \t", "")[0];
+				continue;
+			}
+		}
 
-        if (auto* shape = parseFaceGroup(mesh, faceGroup, lastMaterial, lastName))
-            shapes.add(shape);
+		if (auto* shape = parseFaceGroup(mesh, faceGroup, lastMaterial, lastName))
+			shapes.add(shape);
 
-        return Result::ok();
-    }
+		return Result::ok();
+	}
 
-    Result parseMaterial(Array<Material>& materials, const String& filename)
-    {
-        jassert(sourceFile.exists());
-        auto f = sourceFile.getSiblingFile(filename);
+	Result parseMaterial(Array<Material>& materials, const String& filename)
+	{
+		jassert(sourceFile.exists());
+		auto f = sourceFile.getSiblingFile(filename);
 
-        if (!f.exists())
-            return Result::fail("Cannot open file: " + filename);
+		if (!f.exists())
+			return Result::fail("Cannot open file: " + filename);
 
-        auto lines = StringArray::fromLines(f.loadFileAsString());
+		auto lines = StringArray::fromLines(f.loadFileAsString());
 
-        materials.clear();
-        Material material;
+		materials.clear();
+		Material material;
 
-        for (auto line : lines)
-        {
-            auto l = line.getCharPointer().findEndOfWhitespace();
+		for (auto line : lines)
+		{
+			auto l = line.getCharPointer().findEndOfWhitespace();
 
-            if (matchToken(l, "newmtl")) { materials.add(material); material.name = String(l).trim(); continue; }
+			if (matchToken(l, "newmtl")) { materials.add(material); material.name = String(l).trim(); continue; }
 
-            if (matchToken(l, "Ka")) { material.ambient = parseVertex(l); continue; }
-            if (matchToken(l, "Kd")) { material.diffuse = parseVertex(l); continue; }
-            if (matchToken(l, "Ks")) { material.specular = parseVertex(l); continue; }
-            if (matchToken(l, "Kt")) { material.transmittance = parseVertex(l); continue; }
-            if (matchToken(l, "Ke")) { material.emission = parseVertex(l); continue; }
-            if (matchToken(l, "Ni")) { material.refractiveIndex = parseFloat(l);  continue; }
-            if (matchToken(l, "Ns")) { material.shininess = parseFloat(l);  continue; }
+			if (matchToken(l, "Ka")) { material.ambient = parseVertex(l); continue; }
+			if (matchToken(l, "Kd")) { material.diffuse = parseVertex(l); continue; }
+			if (matchToken(l, "Ks")) { material.specular = parseVertex(l); continue; }
+			if (matchToken(l, "Kt")) { material.transmittance = parseVertex(l); continue; }
+			if (matchToken(l, "Ke")) { material.emission = parseVertex(l); continue; }
+			if (matchToken(l, "Ni")) { material.refractiveIndex = parseFloat(l);  continue; }
+			if (matchToken(l, "Ns")) { material.shininess = parseFloat(l);  continue; }
 
-            if (matchToken(l, "map_Ka")) { material.ambientTextureName = String(l).trim(); continue; }
-            if (matchToken(l, "map_Kd")) { material.diffuseTextureName = String(l).trim(); continue; }
-            if (matchToken(l, "map_Ks")) { material.specularTextureName = String(l).trim(); continue; }
-            if (matchToken(l, "map_Ns")) { material.normalTextureName = String(l).trim(); continue; }
+			if (matchToken(l, "map_Ka")) { material.ambientTextureName = String(l).trim(); continue; }
+			if (matchToken(l, "map_Kd")) { material.diffuseTextureName = String(l).trim(); continue; }
+			if (matchToken(l, "map_Ks")) { material.specularTextureName = String(l).trim(); continue; }
+			if (matchToken(l, "map_Ns")) { material.normalTextureName = String(l).trim(); continue; }
 
-            auto tokens = StringArray::fromTokens(l, " \t", "");
+			auto tokens = StringArray::fromTokens(l, " \t", "");
 
-            if (tokens.size() >= 2)
-                material.parameters.set(tokens[0].trim(), tokens[1].trim());
-        }
+			if (tokens.size() >= 2)
+				material.parameters.set(tokens[0].trim(), tokens[1].trim());
+		}
 
-        materials.add(material);
-        return Result::ok();
-    }
+		materials.add(material);
+		return Result::ok();
+	}
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WavefrontObjFile)
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WavefrontObjFile)
 };

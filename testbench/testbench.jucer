@@ -51,6 +51,7 @@
     </GROUP>
     <GROUP id="{2F2A6C57-AEA2-4754-CB36-1114E889CD9B}" name="Resources">
       <FILE id="Zea2s9" name="goldmatcap.jpg" compile="0" resource="1" file="Resources/goldmatcap.jpg"/>
+      <FILE id="phwdat" name="head.obj" compile="0" resource="1" file="Resources/head.obj"/>
       <FILE id="GAeu6K" name="map.png" compile="0" resource="1" file="Resources/map.png"/>
     </GROUP>
     <GROUP id="{092F2A82-615B-EE96-9D11-C8DD9FF90753}" name="Source">

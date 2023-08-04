@@ -48,9 +48,12 @@ public:
 	Mesh(std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<glm::vec2>& uvs);
 	Mesh(Geometry& geometry);
 
-	//Load a mesh from a file using default juce wavefront obj loader
-	//It's just a mesh, not a whole model, so shapeIdx can be used to select which mesh if a file contains multiple
-	Mesh(const char* filePath, unsigned int shapeIdx = 0);
+	// Load a mesh from a file using default juce wavefront obj loader
+	// It's just a mesh, not a whole model, so shapeIdx can be used to select which mesh if a file contains multiple
+	Mesh(juce::File filePath, unsigned int shapeIdx = 0);
+
+	// loads a mesh from JUCE binary data
+	Mesh(const char* binary_data, const int data_size, unsigned int shapeIdx = 0);
 
 	void render();
 

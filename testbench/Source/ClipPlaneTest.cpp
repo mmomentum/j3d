@@ -47,7 +47,7 @@ void ClipPlaneTest::initialise()
 
 	//Creates a default/sample cube mesh:
 
-	Mesh* testMesh = new Mesh("G:/github/j3d/testbench/Builds/DrenExporter/teapot.obj");
+	Mesh* testMesh = new Mesh(BinaryData::head_obj, BinaryData::head_objSize);
 
 	//testTexture = new Texture({ 100,100 });
 	Texture* testTexture = new Texture(BinaryData::map_png, BinaryData::map_pngSize);

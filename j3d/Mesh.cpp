@@ -11,71 +11,6 @@ void Mesh::initBuffer(const void* data, const int size, const int dimensions, co
 	glVertexAttribPointer(layout, dimensions, GL_FLOAT, GL_FALSE, 0, (void*)0);
 }
 
-Mesh::Mesh(const char* filePath, unsigned int shapeIdx)
-{
-	WavefrontObjFile source;
-	source.load(juce::File(filePath));
-
-	if (source.shapes.size() < 1)
-	{
-		DBG("Could not load model file " + std::string(filePath));
-		return;
-	}
-
-	if (shapeIdx >= source.shapes.size())
-	{
-		shapeIdx = source.shapes.size() - 1;
-		DBG("shapeIdx out of range for " + std::string(filePath));
-		return;
-	}
-
-	WavefrontObjFile::Mesh* sourceMesh = &source.shapes[shapeIdx]->mesh;
-
-	if (sourceMesh->vertices.size() < 1)
-	{
-		DBG("No vertices in shape for file " + std::string(filePath) + "!");
-		return;
-	}
-
-	if (sourceMesh->indices.size() < 1)
-	{
-		DBG("No indicies in shape for file " + std::string(filePath) + "!");
-		return;
-	}
-
-	//TODO: Add checks for normals, uvs...
-	glCreateVertexArrays(1, &VAO);
-	glCreateBuffers(3, buffers);
-	glCreateBuffers(1, &indexBuffer);
-
-	glBindVertexArray(VAO);
-
-	//Pass position data:
-	initBuffer(sourceMesh->vertices.data(), sourceMesh->vertices.size() * sizeof(WavefrontObjFile::Vertex), 3, layout_vertex);
-
-	if (sourceMesh->normals.size() > 0)
-	{
-		initBuffer(sourceMesh->normals.data(), sourceMesh->normals.size() * sizeof(WavefrontObjFile::Vertex), 3, layout_normal);
-		hasNormalBuffer = true;
-	}
-
-	if (sourceMesh->textureCoords.size() > 0)
-	{
-		initBuffer(sourceMesh->textureCoords.data(), sourceMesh->textureCoords.size() * sizeof(WavefrontObjFile::TextureCoord), 2, layout_uv);
-		hasUVBuffer = true;
-	}
-
-	//Indices:
-	numVerts = sourceMesh->indices.size();
-	isIndexed = true;
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sourceMesh->indices.size() * sizeof(WavefrontObjFile::Index), sourceMesh->indices.data(), GL_STATIC_DRAW);
-
-	glBindVertexArray(0);
-
-	valid = true;
-}
-
 Mesh::Mesh(std::vector<glm::vec3>& positions)
 {
 	if (positions.size() < 1)
@@ -318,6 +253,136 @@ Mesh::Mesh()
 		valid = true;
 	else
 		DBG("Error creating vertex array object for Mesh.");
+}
+
+Mesh::Mesh(juce::File filePath, unsigned int shapeIdx)
+{
+	WavefrontObjFile source;
+	source.load(juce::File(filePath));
+
+	if (source.shapes.size() < 1)
+	{
+		//DBG("Could not load model file " + filePath.);
+		return;
+	}
+
+	if (shapeIdx >= source.shapes.size())
+	{
+		shapeIdx = source.shapes.size() - 1;
+		//DBG("shapeIdx out of range for " + std::string(filePath));
+		return;
+	}
+
+	WavefrontObjFile::Mesh* sourceMesh = &source.shapes[shapeIdx]->mesh;
+
+	if (sourceMesh->vertices.size() < 1)
+	{
+		//DBG("No vertices in shape for file " + std::string(filePath) + "!");
+		return;
+	}
+
+	if (sourceMesh->indices.size() < 1)
+	{
+		//DBG("No indicies in shape for file " + std::string(filePath) + "!");
+		return;
+	}
+
+	//TODO: Add checks for normals, uvs...
+	glCreateVertexArrays(1, &VAO);
+	glCreateBuffers(3, buffers);
+	glCreateBuffers(1, &indexBuffer);
+
+	glBindVertexArray(VAO);
+
+	//Pass position data:
+	initBuffer(sourceMesh->vertices.data(), sourceMesh->vertices.size() * sizeof(WavefrontObjFile::Vertex), 3, layout_vertex);
+
+	if (sourceMesh->normals.size() > 0)
+	{
+		initBuffer(sourceMesh->normals.data(), sourceMesh->normals.size() * sizeof(WavefrontObjFile::Vertex), 3, layout_normal);
+		hasNormalBuffer = true;
+	}
+
+	if (sourceMesh->textureCoords.size() > 0)
+	{
+		initBuffer(sourceMesh->textureCoords.data(), sourceMesh->textureCoords.size() * sizeof(WavefrontObjFile::TextureCoord), 2, layout_uv);
+		hasUVBuffer = true;
+	}
+
+	//Indices:
+	numVerts = sourceMesh->indices.size();
+	isIndexed = true;
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sourceMesh->indices.size() * sizeof(WavefrontObjFile::Index), sourceMesh->indices.data(), GL_STATIC_DRAW);
+
+	glBindVertexArray(0);
+
+	valid = true;
+}
+
+Mesh::Mesh(const char* binary_data, const int data_size, unsigned int shapeIdx)
+{
+	WavefrontObjFile source;
+	source.load(binary_data, data_size);
+
+	if (source.shapes.size() < 1)
+	{
+		DBG("Could not load model file from binary data mesh.");
+		return;
+	}
+
+	if (shapeIdx >= source.shapes.size())
+	{
+		shapeIdx = source.shapes.size() - 1;
+		DBG("shapeIdx out of range for binary data mesh.");
+		return;
+	}
+
+	WavefrontObjFile::Mesh* sourceMesh = &source.shapes[shapeIdx]->mesh;
+
+	if (sourceMesh->vertices.size() < 1)
+	{
+		DBG("No vertices in shape for binary data mesh");
+		return;
+	}
+
+	if (sourceMesh->indices.size() < 1)
+	{
+		DBG("No indicies in shape for binary data mesh");
+		return;
+	}
+
+	//TODO: Add checks for normals, uvs...
+	glCreateVertexArrays(1, &VAO);
+	glCreateBuffers(3, buffers);
+	glCreateBuffers(1, &indexBuffer);
+
+	glBindVertexArray(VAO);
+
+	//Pass position data:
+	initBuffer(sourceMesh->vertices.data(), sourceMesh->vertices.size() * sizeof(WavefrontObjFile::Vertex), 3, layout_vertex);
+
+	if (sourceMesh->normals.size() > 0)
+	{
+		initBuffer(sourceMesh->normals.data(), sourceMesh->normals.size() * sizeof(WavefrontObjFile::Vertex), 3, layout_normal);
+		hasNormalBuffer = true;
+	}
+
+	if (sourceMesh->textureCoords.size() > 0)
+	{
+		initBuffer(sourceMesh->textureCoords.data(), sourceMesh->textureCoords.size() * sizeof(WavefrontObjFile::TextureCoord), 2, layout_uv);
+		hasUVBuffer = true;
+	}
+
+	//Indices:
+	numVerts = sourceMesh->indices.size();
+	isIndexed = true;
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sourceMesh->indices.size() * sizeof(WavefrontObjFile::Index), sourceMesh->indices.data(), GL_STATIC_DRAW);
+
+	glBindVertexArray(0);
+
+	valid = true;
 }
 
 void Mesh::render()
