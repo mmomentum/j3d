@@ -45,6 +45,17 @@ void ClipPlaneTest::initialise()
 
 	orbit_controls = new CameraOrbitControls(*theCamera, *this);
 
+	//Get sky box made:
+
+	program* rectToCube = rectToCubeProgram();
+	GLuint skyBoxTexture = processEquirectangularMap(*rectToCube, "G:/github/j3d/testbench/Resources", true);
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+	{
+		std::cout << "OpenGL error " << err << "\n\n";
+	}
+	 
 	//Creates a default/sample cube mesh:
 
 	Mesh* testMesh = new Mesh(BinaryData::head_obj, BinaryData::head_objSize);
@@ -58,6 +69,8 @@ void ClipPlaneTest::initialise()
 
 	Material* secondMaterial = new Material;
 	secondMaterial->setTexture(new Texture(glm::ivec2(200,200)), albedo);
+
+
 
 	ourMatCap = new Texture(BinaryData::goldmatcap_jpg, BinaryData::goldmatcap_jpgSize);
 	/*meshObject* cube = new meshObject;

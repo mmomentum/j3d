@@ -5,6 +5,7 @@
 #include "../../j3d/Camera.h"
 #include "../../j3d/Mesh.h"
 #include "../../j3d/SceneObject.h"
+#include "../../j3d/environment.h"
 
 #include "../../j3d/CameraOrbitControls.h"
 

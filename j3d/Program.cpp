@@ -250,18 +250,18 @@ program::program(shaderFlags shadersToLoad)
     expectedShaders = shadersToLoad;
 }
 
-bool program::loadShader(shaderFlags shaderType, const char* filePath)
+bool program::loadShader(shaderFlags shaderType, char *data,int size, std::string filePath)
 {
     int arrayPos = -1;
     GLenum glShaderFlag;
 
     switch (shaderType)
     {
-        case vertexShader:   glShaderFlag = GL_VERTEX_SHADER;           arrayPos = 0; break;
-        case fragmentShader: glShaderFlag = GL_FRAGMENT_SHADER;         arrayPos = 1; break;
-        case tessEvalShader: glShaderFlag = GL_TESS_EVALUATION_SHADER;  arrayPos = 2; break;
-        case tessCtrlShader: glShaderFlag = GL_TESS_CONTROL_SHADER;     arrayPos = 3; break;
-        default: DBG("Invalid shaderFlags enum."); return true;
+    case vertexShader:   glShaderFlag = GL_VERTEX_SHADER;           arrayPos = 0; break;
+    case fragmentShader: glShaderFlag = GL_FRAGMENT_SHADER;         arrayPos = 1; break;
+    case tessEvalShader: glShaderFlag = GL_TESS_EVALUATION_SHADER;  arrayPos = 2; break;
+    case tessCtrlShader: glShaderFlag = GL_TESS_CONTROL_SHADER;     arrayPos = 3; break;
+    default: DBG("Invalid shaderFlags enum."); return true;
     }
 
     if (glIsShader(shaders[arrayPos]))
@@ -270,28 +270,23 @@ bool program::loadShader(shaderFlags shaderType, const char* filePath)
         return true;
     }
 
-    std::ifstream shaderFile(filePath, std::ios::ate | std::ios::binary);
-    if (!shaderFile.is_open())
-    {
-        DBG("Could not open " + std::string(filePath) + " to load shader.");
-        return true;
-    }
-
     shaders[arrayPos] = glCreateShader(glShaderFlag);
 
     //Figure out how big file is then return to start position
-    int size = shaderFile.tellg();
-    shaderFile.seekg(0);
+    //int size = shaderFile.tellg();
+    //int size = body.length();
+    //shaderFile.seekg(0);
 
     //Load shader text and compile it:
-    char* data = new char[size];
-    shaderFile.read(data, size);
+    //char* data = new char[size];
+    //memcpy(data, body.c_str(), size);
+    //shaderFile.read(data, size);
 
     glShaderSource(shaders[arrayPos], 1, &data, &size);
     glCompileShader(shaders[arrayPos]);
 
-    shaderFile.close();
-    delete data;
+    //shaderFile.close();
+    //delete data;
 
     //Get error log if there is one:
     int errorLogLength = 0;
@@ -367,6 +362,28 @@ bool program::loadShader(shaderFlags shaderType, const char* filePath)
     findUniforms();
 
     return false;
+}
+
+bool program::loadShader(shaderFlags shaderType, const char* filePath)
+{
+    std::ifstream shaderFile(filePath, std::ios::ate | std::ios::binary);
+    if (!shaderFile.is_open())
+    {
+        DBG("Could not open " + std::string(filePath) + " to load shader.");
+        return true;
+    }
+
+    int size = shaderFile.tellg();
+    shaderFile.seekg(0);
+
+    char* data = new char[size];
+    shaderFile.read(data, size);
+
+    bool ret = loadShader(shaderType, data, size, filePath);
+
+    delete data;
+
+    return ret;
 }
 
 program::~program()

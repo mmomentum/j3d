@@ -91,6 +91,7 @@ class program
         //Program will compile when all expected shaders have been loaded
         //Returns true on error
         bool loadShader(shaderFlags shaderType, const char* filePath);
+        bool loadShader(shaderFlags shaderType, char* data, int size, std::string filePath = "");
 
         inline const bool isValid() { return valid; }
         const void use();

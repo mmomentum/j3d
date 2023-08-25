@@ -9,3 +9,9 @@
 */
 
 #pragma once
+
+#include "Texture.h"
+
+GLuint processEquirectangularMap(program& rectToCube, std::string fileName, bool mipMaps);
+program* rectToCubeProgram();
+
