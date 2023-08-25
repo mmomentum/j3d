@@ -6,6 +6,7 @@
 #include "../../j3d/Mesh.h"
 #include "../../j3d/SceneObject.h"
 #include "../../j3d/environment.h"
+#include "../../j3d/Geometries/GeometrySphere.h"
 
 #include "../../j3d/CameraOrbitControls.h"
 
@@ -25,7 +26,7 @@ public:
 	void resized() override;
 
 private:
-
+	GLuint skyBoxTexture = 0;
 	Texture* ourMatCap = 0;
 	program* theProgram = 0;
 	camera* theCamera = 0;

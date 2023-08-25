@@ -58,6 +58,7 @@ const char* sampleFragmentShader = R"V0G0N(
     uniform sampler2D normalMap; 
     uniform sampler2D mohrTexture;
     uniform sampler2D matcapTexture;
+    uniform samplerCube skyboxTexture;
     uniform vec3 lightPosition;
     uniform vec3 lightColor;
     uniform vec3 cameraPosition;
@@ -82,20 +83,8 @@ const char* sampleFragmentShader = R"V0G0N(
         float cosTheta = clamp(dot(lightDir,normal),0.0,1.0);
         cosTheta += 0.15;
 
-        vec3 r = reflect(viewPos,normal);
-        float m = 2.0 * sqrt(pow(r.x,2.0) + pow(r.y,2.0) + pow(r.z+1.0,2.0));
-        vec2 vN = r.xy / m + 0.5;
-        color.rgb = texture(matcapTexture,vN).rgb;
+        color.rgb = texture(skyboxTexture,normal).rgb;
         color.a = 1.0;
-        return;
-
-
-        color = vec4(
-                matcap(normalize(worldPos-cameraPosition),normal)
-                ,0.0,1);
-        return;
-
-        //color.rgb = texture(matcapTexture,matcap(normalize(worldPos-cameraPosition),normal)).rgb;
 	}
 	)V0G0N";
 
@@ -122,13 +111,13 @@ const void program::use()
 
     if (uniform_cameraPosition != -1)
         glUniform3f(uniform_cameraPosition, cameraPosition.x, cameraPosition.y, cameraPosition.z);
-    else
-        DBG("Could not find uniform_cameraPosition");
+    /*else
+        DBG("Could not find uniform_cameraPosition");*/
 
     if (uniform_cameraDirection != -1)
         glUniform3f(uniform_cameraDirection, cameraDirection.x, cameraDirection.y, cameraDirection.z);
-    else
-        DBG("Could not find uniform_cameraDirection");
+    /*else
+        DBG("Could not find uniform_cameraDirection");*/
 }
 
 void program::findUniforms()
@@ -147,6 +136,7 @@ void program::findUniforms()
     samplerUniformLoc[normalMap] = getUniformLocation("normalMap");
     samplerUniformLoc[mohr] = getUniformLocation("mohrTexture");
     samplerUniformLoc[matCap] = getUniformLocation("matcapTexture");
+    samplerUniformLoc[skyBox] = getUniformLocation("skyboxTexture");
 } 
 
 program::program()

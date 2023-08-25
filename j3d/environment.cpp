@@ -38,6 +38,7 @@ const char* rectToCubeFrag = R"V0G0N(
             vec3 color = texture(albedoTexture, uv).rgb;
     
             FragColor = vec4(color, 1.0);
+            //FragColor = vec4(normalize(localPos),1.0);
         }
 	)V0G0N";
 

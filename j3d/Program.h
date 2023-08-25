@@ -29,7 +29,8 @@ enum textureBindNames
     normalMap = 1,
     mohr = 2,
     matCap = 3,
-    endOfEnum = 4
+    skyBox = 4,
+    endOfEnum = 5
 };
 
 class program
@@ -47,7 +48,7 @@ class program
         shaderFlags expectedShaders = noShaders;
 		shaderFlags compiledShaders = noShaders;
 
-        GLint samplerUniformLoc[textureBindNames::endOfEnum] = { 0,0,0 };
+        GLint samplerUniformLoc[textureBindNames::endOfEnum] = { 0,0,0,0,0 };
 
         //TODO: Expand later for geometry or compute shader?
 		GLuint shaders[maxShaders] = { 0,0,0,0 };

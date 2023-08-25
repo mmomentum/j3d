@@ -51,7 +51,7 @@ void ClipPlaneTest::initialise()
 
 	Texture incoming_texture(BinaryData::skybox_jpg, BinaryData::skybox_jpgSize);
 
-	GLuint skyBoxTexture = processEquirectangularMap(*rectToCube, incoming_texture, true);
+	skyBoxTexture = processEquirectangularMap(*rectToCube, incoming_texture, true);
 
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
@@ -61,7 +61,7 @@ void ClipPlaneTest::initialise()
 	 
 	//Creates a default/sample cube mesh:
 
-	Mesh* testMesh = new Mesh(BinaryData::head_obj, BinaryData::head_objSize);
+	Mesh* testMesh = new Mesh(GeometrySphere::create());   //new Mesh(BinaryData::head_obj, BinaryData::head_objSize);
 
 	//testTexture = new Texture({ 100,100 });
 	Texture* testTexture = new Texture(BinaryData::map_png, BinaryData::map_pngSize);
@@ -109,6 +109,9 @@ void ClipPlaneTest::render()
 	glClearColor(1, 0.5, 0.2, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glActiveTexture(GL_TEXTURE0 + skyBox);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, skyBoxTexture);
+
 	theCamera->render(theProgram);
 	theProgram->use();
 
@@ -118,6 +121,13 @@ void ClipPlaneTest::render()
 	theProgram->setLightPosition(lightPosition);
 	for (int a = 0; a < scene.size(); a++)
 		scene[a]->render(theProgram);
+
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR)
+	{
+		std::cout << "OpenGL error " << err << "\n\n";
+	}
 }
 
 void ClipPlaneTest::resized()
