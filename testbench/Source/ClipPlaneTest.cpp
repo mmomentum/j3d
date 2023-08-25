@@ -48,7 +48,10 @@ void ClipPlaneTest::initialise()
 	//Get sky box made:
 
 	program* rectToCube = rectToCubeProgram();
-	GLuint skyBoxTexture = processEquirectangularMap(*rectToCube, "G:/github/j3d/testbench/Resources", true);
+
+	Texture incoming_texture(BinaryData::skybox_jpg, BinaryData::skybox_jpgSize);
+
+	GLuint skyBoxTexture = processEquirectangularMap(*rectToCube, incoming_texture, true);
 
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)

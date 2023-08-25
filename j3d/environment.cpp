@@ -1,13 +1,3 @@
-/*
-  ==============================================================================
-
-    environment.cpp
-    Created: 25 Aug 2023 12:49:58am
-    Author:  Syerjchep
-
-  ==============================================================================
-*/
-
 #include "environment.h"
 
 const char* rectToCubeVert = R"V0G0N(
@@ -182,16 +172,13 @@ void glUniformMat(GLint location, glm::mat4 mat)
     glUniformMatrix4fv(location, 1, GL_FALSE, &mat[0][0]);
 }
 
-GLuint processEquirectangularMap(program& rectToCube, std::string fileName, bool mipMaps)
+GLuint processEquirectangularMap(program& rectToCube, Texture& sourceRect, bool mipMaps)
 {
     GLuint cubeVAO = createCubeVAO();
 
     unsigned int width = 2048, height = 2048;
 
     //Our normal renderTarget code doens't support cubemaps
-
-    Texture sourceRect(fileName.c_str());
-    //sourceRect.createFromFile(fileName);
 
     unsigned int captureFBO, captureRBO;
     glGenFramebuffers(1, &captureFBO);
