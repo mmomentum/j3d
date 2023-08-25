@@ -30,6 +30,8 @@ const char* sampleVertexShader = R"V0G0N(
 	out vec3 normal;
     out vec3 worldPos;
     out vec2 UV;
+    out vec3 viewPos;
+    //out vec2 matCapTestUVs;
 
 	void main()
 	{
@@ -37,6 +39,11 @@ const char* sampleVertexShader = R"V0G0N(
 		normal = normalize((modelMatrix * vec4(vertexNormal,0.0)).xyz);
         worldPos = (modelMatrix * vec4(vertexPosition,1.0)).xyz;
 		gl_Position = cameraProjection * cameraView * vec4(worldPos,1.0);
+
+        //vec3 e = normalize(vec3(modelViewMatrix * vec4(worldPos,1.0)));
+        //vec3 
+
+        viewPos = (cameraView * vec4(worldPos,1.0)).xyz;
 
 		gl_ClipDistance[0] = clipPlaneOffset + clipPlaneDirection.x * vertexPosition.x +  clipPlaneDirection.y * vertexPosition.y +  clipPlaneDirection.z * vertexPosition.z;
 	}
@@ -59,6 +66,7 @@ const char* sampleFragmentShader = R"V0G0N(
 	in vec3 normal; 
     in vec3 worldPos;
     in vec2 UV;
+    in vec3 viewPos;
 
 	out vec4 color;
 
@@ -74,12 +82,20 @@ const char* sampleFragmentShader = R"V0G0N(
         float cosTheta = clamp(dot(lightDir,normal),0.0,1.0);
         cosTheta += 0.15;
 
-        color.rgb = texture2D(albedo,UV).rgb;
-        color.rgb *= cosTheta * lightColor;
+        vec3 r = reflect(viewPos,normal);
+        float m = 2.0 * sqrt(pow(r.x,2.0) + pow(r.y,2.0) + pow(r.z+1.0,2.0));
+        vec2 vN = r.xy / m + 0.5;
+        color.rgb = texture(matcapTexture,vN).rgb;
         color.a = 1.0;
+        return;
 
-        color.rgb = texture(matcapTexture,matcap(normalize(worldPos-cameraPosition),normal)).rgb;
-        //color.rgb = reflect(normalize(worldPos-cameraPosition),normal);
+
+        color = vec4(
+                matcap(normalize(worldPos-cameraPosition),normal)
+                ,0.0,1);
+        return;
+
+        //color.rgb = texture(matcapTexture,matcap(normalize(worldPos-cameraPosition),normal)).rgb;
 	}
 	)V0G0N";
 
