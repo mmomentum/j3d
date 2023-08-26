@@ -7,13 +7,13 @@ struct GeometryCube
 {
     struct Params 
     {
-        float width;
-        float height;
-        float depth;
+        float width = 1.0f;
+        float height = 1.0f;
+        float depth = 1.0f;
 
-        unsigned int widthSegments;
-        unsigned int heightSegments;
-        unsigned int depthSegments;
+        unsigned int widthSegments = 1;
+        unsigned int heightSegments = 1;
+        unsigned int depthSegments = 1;
     };
 
     const float width, height, depth;

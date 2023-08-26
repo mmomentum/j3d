@@ -8,13 +8,13 @@ struct GeometrySphere
 {
 	struct Params
 	{
-		float radius;
-		unsigned int widthSegments;
-		unsigned int heightSegments;
-		float phiStart;
-		float phiLength;
-		float thetaStart;
-		float thetaLength;
+		float radius = 1.0f;
+		unsigned int widthSegments = 16;
+		unsigned int heightSegments = 12;
+		float phiStart = 0;
+		float phiLength = juce::MathConstants<float>::twoPi;
+		float thetaStart = 0;
+		float thetaLength = juce::MathConstants<float>::pi;
 	};
 
 	static Mesh::Geometry create(Params& params);
