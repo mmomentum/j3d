@@ -49,9 +49,13 @@ void ClipPlaneTest::initialise()
 
 	program* rectToCube = rectToCubeProgram();
 
-	Texture incoming_texture(BinaryData::skybox_jpg, BinaryData::skybox_jpgSize);
+	Texture incoming_texture(BinaryData::output_pmrem_png, BinaryData::output_pmrem_pngSize);
+	radMapSky = processEquirectangularMap(*rectToCube, incoming_texture, true);
 
-	skyBoxTexture = processEquirectangularMap(*rectToCube, incoming_texture, true);
+	Texture incoming_texture2(BinaryData::output_iem_png, BinaryData::output_iem_pngSize);
+	irradMapSky = processEquirectangularMap(*rectToCube, incoming_texture2, true);
+
+	bdrf_lut = createBDRFLUTTexture();
 
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
@@ -61,19 +65,25 @@ void ClipPlaneTest::initialise()
 	 
 	//Creates a default/sample cube mesh:
 
-	Mesh* testMesh = new Mesh(GeometrySphere::create());   //new Mesh(BinaryData::head_obj, BinaryData::head_objSize);
+	GeometrySphere::Params test; 
+	test.widthSegments = 16*3;
+	test.heightSegments = 12*3;
+	test.radius = 1.0;
+	test.phiStart = 0,
+	test.phiLength = juce::MathConstants<float>::twoPi,
+	test.thetaStart = 0,
+	test.thetaLength = juce::MathConstants<float>::pi;
+	Mesh* testMesh = new Mesh(GeometrySphere::create(test));   //new Mesh(BinaryData::head_obj, BinaryData::head_objSize);
 
 	//testTexture = new Texture({ 100,100 });
-	Texture* testTexture = new Texture(BinaryData::map_png, BinaryData::map_pngSize);
+	Texture* brickAlbedo = new Texture(BinaryData::brick_albedo_png, BinaryData::brick_albedo_pngSize);
 	//Texture *testTexture = new Texture("G:/2003-2008 hd one/cshot2noa.png");
 	Material* testMaterial = new Material;
-	testMaterial->setTexture(testTexture, albedo);
+	testMaterial->setTexture(brickAlbedo, albedo);
 	//testMaterial->enableClipping(glm::normalize(glm::vec3(1, 1, 0)), 0);
 
 	Material* secondMaterial = new Material;
 	secondMaterial->setTexture(new Texture(glm::ivec2(200,200)), albedo);
-
-
 
 	ourMatCap = new Texture(BinaryData::goldmatcap_jpg, BinaryData::goldmatcap_jpgSize);
 	/*meshObject* cube = new meshObject;
@@ -109,13 +119,16 @@ void ClipPlaneTest::render()
 	glClearColor(1, 0.5, 0.2, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glActiveTexture(GL_TEXTURE0 + skyBox);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, skyBoxTexture);
+	glActiveTexture(GL_TEXTURE0 + radMap);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, radMapSky);
+	glActiveTexture(GL_TEXTURE0 + irradMap);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, irradMapSky);
+
+	glActiveTexture(GL_TEXTURE0 + bdrf);
+	glBindTexture(GL_TEXTURE_2D, bdrf_lut);
 
 	theCamera->render(theProgram);
 	theProgram->use();
-
-	ourMatCap->bind(matCap);
 
 	theProgram->setLightColor(lightColor);
 	theProgram->setLightPosition(lightPosition);

@@ -29,8 +29,10 @@ enum textureBindNames
     normalMap = 1,
     mohr = 2,
     matCap = 3,
-    skyBox = 4,
-    endOfEnum = 5
+    radMap = 4,
+    bdrf = 5,
+    irradMap = 6,
+    endOfEnum = 7
 };
 
 class program

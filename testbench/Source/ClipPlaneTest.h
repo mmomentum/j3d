@@ -26,7 +26,9 @@ public:
 	void resized() override;
 
 private:
-	GLuint skyBoxTexture = 0;
+	GLuint radMapSky = 0;
+	GLuint irradMapSky = 0;
+	GLuint bdrf_lut = 0;
 	Texture* ourMatCap = 0;
 	program* theProgram = 0;
 	camera* theCamera = 0;

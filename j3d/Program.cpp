@@ -58,7 +58,9 @@ const char* sampleFragmentShader = R"V0G0N(
     uniform sampler2D normalMap; 
     uniform sampler2D mohrTexture;
     uniform sampler2D matcapTexture;
-    uniform samplerCube skyboxTexture;
+    uniform samplerCube radMap;
+    uniform samplerCube irradMap;
+    uniform sampler2D bdrfLut;
     uniform vec3 lightPosition;
     uniform vec3 lightColor;
     uniform vec3 cameraPosition;
@@ -77,13 +79,48 @@ const char* sampleFragmentShader = R"V0G0N(
       return reflected.xy / m + 0.5; 
     }
 
+    vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
+    {
+        return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
+    }   
+
 	void main()
 	{
-        vec3 lightDir = normalize(worldPos-lightPosition);
-        float cosTheta = clamp(dot(lightDir,normal),0.0,1.0);
-        cosTheta += 0.15;
+        float roughness = 0.1;
+        float metalness = 0.0;
 
-        color.rgb = texture(skyboxTexture,normal).rgb;
+        vec3 viewVector = normalize(cameraPosition - worldPos);
+        vec3 R = reflect(-viewVector,normal);
+
+        vec3 irradiance = textureLod(irradMap,normal,0).rgb;
+
+        vec3 albedo = texture(albedo,UV).rgb;
+	    float nonLinearAlbedoF = 1.0;											//Honestly no clue if this applies to bricks...
+	    albedo = pow(albedo.rgb,vec3(1.0 + 1.2 * nonLinearAlbedoF));
+
+        vec3 diffuse = albedo * irradiance;
+
+	    float NdotV = max(dot(normal, viewVector), 0.0);	   
+	    vec3 F0 = vec3(0.04); 
+        F0 = mix(F0, albedo, metalness);
+        vec3 F = fresnelSchlickRoughness(NdotV, F0, roughness);
+	    vec3 kS = F;
+        vec3 kD = vec3(1.0) - kS;
+        kD *= 1.0 - metalness;
+
+        const float MAX_REFLECTION_LOD = 10.0;
+        vec3 radiance = textureLod(radMap, R,  roughness * MAX_REFLECTION_LOD).rgb;
+
+        vec2 brdf = texture(bdrfLut, vec2(max(dot(normal, viewVector), 0.0), roughness)).rg;
+
+        vec3 specular = radiance * (F * brdf.x + brdf.y);
+        color.rgb = (kD * diffuse + specular);
+
+	    //Tone maping
+	    color.rgb = color.rgb / (color.rgb + vec3(1.0));
+	    //Gamma correction
+	    color.rgb = pow(color.rgb, vec3(1.0/2.2)); 
+        //Fixed alpha
         color.a = 1.0;
 	}
 	)V0G0N";
@@ -136,7 +173,9 @@ void program::findUniforms()
     samplerUniformLoc[normalMap] = getUniformLocation("normalMap");
     samplerUniformLoc[mohr] = getUniformLocation("mohrTexture");
     samplerUniformLoc[matCap] = getUniformLocation("matcapTexture");
-    samplerUniformLoc[skyBox] = getUniformLocation("skyboxTexture");
+    samplerUniformLoc[radMap] = getUniformLocation("radMap");
+    samplerUniformLoc[bdrf] = getUniformLocation("bdrfLut");
+    samplerUniformLoc[irradMap] = getUniformLocation("irradMap");
 } 
 
 program::program()

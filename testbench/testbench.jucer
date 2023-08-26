@@ -52,6 +52,11 @@
             file="../j3d/WavefrontObjFile.h"/>
     </GROUP>
     <GROUP id="{2F2A6C57-AEA2-4754-CB36-1114E889CD9B}" name="Resources">
+      <FILE id="BAaQmP" name="output_iem.png" compile="0" resource="1" file="Resources/output_iem.png"/>
+      <FILE id="ChfcZB" name="output_pmrem.png" compile="0" resource="1"
+            file="Resources/output_pmrem.png"/>
+      <FILE id="Gv0qOG" name="brick_albedo.png" compile="0" resource="1"
+            file="Resources/brick_albedo.png"/>
       <FILE id="mCvN1W" name="skybox.jpg" compile="0" resource="1" file="Resources/skybox.jpg"/>
       <FILE id="Zea2s9" name="goldmatcap.jpg" compile="0" resource="1" file="Resources/goldmatcap.jpg"/>
       <FILE id="phwdat" name="head.obj" compile="0" resource="1" file="Resources/head.obj"/>
