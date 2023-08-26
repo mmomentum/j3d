@@ -46,6 +46,7 @@
       <FILE id="YnCEfL" name="Program.h" compile="0" resource="0" file="../j3d/Program.h"/>
       <FILE id="carBtb" name="SceneObject.cpp" compile="1" resource="0" file="../j3d/SceneObject.cpp"/>
       <FILE id="uvMQII" name="SceneObject.h" compile="0" resource="0" file="../j3d/SceneObject.h"/>
+      <FILE id="hOR2VJ" name="stb_image.h" compile="0" resource="0" file="../j3d/stb_image.h"/>
       <FILE id="bjzV3E" name="Texture.cpp" compile="1" resource="0" file="../j3d/Texture.cpp"/>
       <FILE id="IJHPAl" name="Texture.h" compile="0" resource="0" file="../j3d/Texture.h"/>
       <FILE id="BctjGf" name="WavefrontObjFile.h" compile="0" resource="0"

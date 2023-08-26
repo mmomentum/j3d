@@ -1,5 +1,8 @@
 #include "environment.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 const char* rectToCubeVert = R"V0G0N(
         #version 400 core
         layout (location = 0) in vec3 aPos;
@@ -443,6 +446,164 @@ GLuint createCubeVAO()
 void glUniformMat(GLint location, glm::mat4 mat)
 {
     glUniformMatrix4fv(location, 1, GL_FALSE, &mat[0][0]);
+}
+
+GLuint processEquirectangularMap(program& rectToCube, std::string filePath, bool mipMaps)
+{
+    DBG("Loading map from file!");
+
+    int inputWidth, inputHeight, channels;
+
+    if (!stbi_is_hdr(filePath.c_str()))
+    {
+        DBG("This function requires an HDR image!");
+        return 0;
+    }
+
+    float *data = stbi_loadf(filePath.c_str(), &inputWidth, &inputHeight, &channels, 0);
+    if (!data)
+    {
+        DBG("Could not load " + filePath);
+        return 0;
+    }
+
+    if (inputWidth == 0 || inputHeight == 0 || channels == 0)
+    {
+        DBG("Could not load " + filePath);
+        return 0;
+    }
+
+    if (channels != 3)
+    {
+        DBG("Lighting maps should have 3 channels!");
+        return 0;
+    }
+
+    DBG("Image properties: " + std::to_string(inputWidth) + " " + std::to_string(inputHeight) + " " + std::to_string(channels));
+
+    /*for (int a = 0; a < inputWidth * inputHeight * channels; a += 100)
+    {
+        DBG("DVal : " + std::to_string(data[a]));
+    }*/
+    //for (int a = 0; a < inputWidth * inputHeight * channels; a++)
+        //data[a] = 0.5;
+
+    GLuint sourceRect = 0;
+    glGenTextures(1, &sourceRect);
+
+    DBG("Source rect: " + std::to_string(sourceRect));
+
+    glBindTexture(GL_TEXTURE_2D, sourceRect);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, inputWidth, inputHeight, 0, GL_RGB, GL_FLOAT, data);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    DBG("OpenGL Error: " + std::to_string(glGetError()));
+
+    GLuint cubeVAO = createCubeVAO();
+
+    unsigned int width = 2048, height = 2048;
+
+    //Our normal renderTarget code doens't support cubemaps
+
+    unsigned int captureFBO, captureRBO;
+    glGenFramebuffers(1, &captureFBO);
+    glGenRenderbuffers(1, &captureRBO);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+    glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
+
+    GLuint envCubemap = 0;
+    glGenTextures(1, &envCubemap);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
+    for (unsigned int i = 0; i < 6; ++i)
+    {
+        // note that we store each face with 16 bit floating point values
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F,
+            width, height, 0, GL_RGB, GL_FLOAT, nullptr);
+        /*int mipLevel = 0;
+        while((1<<mipLevel) <= std::max(width,height))
+        {
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, mipLevel, GL_RGB16F,
+                        width/(1<<mipLevel), height/(1<<mipLevel), 0, GL_RGB, GL_FLOAT, nullptr);
+            mipLevel++;
+        }*/
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    if (mipMaps)
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    else
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
+    glm::mat4 captureViews[] =
+    {
+       glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+       glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+       glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
+       glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
+       glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+       glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
+    };
+
+    // convert HDR equirectangular environment map to cubemap equivalent
+    rectToCube.use();
+    glUniform1i(rectToCube.getUniformLocation("albedoTexture"), 0);
+    glUniformMat(rectToCube.getUniformLocation("projection"), captureProjection);
+
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_DEPTH_TEST);
+    glViewport(0, 0, width, height); // don't forget to configure the viewport to the capture dimensions.
+    glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+    glBindVertexArray(cubeVAO);
+    for (unsigned int i = 0; i < 6; ++i)
+    {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, sourceRect);
+
+        glUniformMat(rectToCube.getUniformLocation("view"), captureViews[i]);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+            GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, envCubemap, 0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        //The code from learnopengl uses a cube from 0-1 I think but we're using a cube from -0.5 to 0.5
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+    glBindVertexArray(0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+
+    glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
+    if (mipMaps)
+        glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+    glDeleteVertexArrays(1, &cubeVAO);
+
+    stbi_image_free(data);
+    glDeleteTextures(1, &sourceRect);
+
+    DBG("OpenGL Error: " + std::to_string(glGetError()));
+    DBG("Done loading map from file!");
+
+    return envCubemap;
 }
 
 GLuint processEquirectangularMap(program& rectToCube, Texture& sourceRect, bool mipMaps)

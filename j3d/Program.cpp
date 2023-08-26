@@ -86,8 +86,8 @@ const char* sampleFragmentShader = R"V0G0N(
 
 	void main()
 	{
-        float roughness = 0.1;
-        float metalness = 0.0;
+        float roughness = 0.5;
+        float metalness = 0.5;
 
         vec3 viewVector = normalize(cameraPosition - worldPos);
         vec3 R = reflect(-viewVector,normal);

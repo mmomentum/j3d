@@ -49,14 +49,17 @@ void ClipPlaneTest::initialise()
 
 	program* rectToCube = rectToCubeProgram();
 
-	Texture incoming_texture(BinaryData::output_pmrem_png, BinaryData::output_pmrem_pngSize);
+	/*Texture incoming_texture(BinaryData::output_pmrem_png, BinaryData::output_pmrem_pngSize);
 	radMapSky = processEquirectangularMap(*rectToCube, incoming_texture, true);
 
 	Texture incoming_texture2(BinaryData::output_iem_png, BinaryData::output_iem_pngSize);
-	irradMapSky = processEquirectangularMap(*rectToCube, incoming_texture2, true);
+	irradMapSky = processEquirectangularMap(*rectToCube, incoming_texture2, true);*/
+
+	radMapSky = processEquirectangularMap(*rectToCube, "output_pmrem.hdr", true);
+	irradMapSky = processEquirectangularMap(*rectToCube, "output_iem.hdr", true);
 
 	bdrf_lut = createBDRFLUTTexture();
-
+	 
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
 	{
@@ -65,7 +68,7 @@ void ClipPlaneTest::initialise()
 	 
 	//Creates a default/sample cube mesh:
 
-	GeometrySphere::Params test; 
+	/*GeometrySphere::Params test;
 	test.widthSegments = 16*3;
 	test.heightSegments = 12*3;
 	test.radius = 1.0;
@@ -73,7 +76,8 @@ void ClipPlaneTest::initialise()
 	test.phiLength = juce::MathConstants<float>::twoPi,
 	test.thetaStart = 0,
 	test.thetaLength = juce::MathConstants<float>::pi;
-	Mesh* testMesh = new Mesh(GeometrySphere::create(test));   //new Mesh(BinaryData::head_obj, BinaryData::head_objSize);
+	Mesh* testMesh = new Mesh(GeometrySphere::create(test));*/
+	Mesh *testMesh = new Mesh(BinaryData::head_obj, BinaryData::head_objSize);
 
 	//testTexture = new Texture({ 100,100 });
 	Texture* brickAlbedo = new Texture(BinaryData::brick_albedo_png, BinaryData::brick_albedo_pngSize);
