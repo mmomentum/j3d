@@ -16,12 +16,12 @@
 struct camera
 {
     public:
-
         float pitch = 0.0;
         float yaw = 0.0;
 
         glm::vec3 position = glm::vec3(0, 0, 0);
         glm::vec3 direction = glm::vec3(0, 0, 1);
+        glm::vec3 up = glm::vec3(0, 1, 0);
 
         void turn(float deltaYaw, float deltaPitch);
         void moveForward(float amount);
