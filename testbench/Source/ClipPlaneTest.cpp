@@ -100,9 +100,9 @@ void ClipPlaneTest::initialise()
 	meshInstance* ghost = new meshInstance;
 	ghost->scale = glm::vec3(0.3, 0.3, 0.3);
 	ghost->theMaterial = testMaterial;
-	ghost->add(testMesh)->add(testMesh, glm::vec3(5, 0, 0))->add(testMesh,glm::vec3(5,0,0))->add(testMesh, glm::vec3(5, 0, 0));
+	ghost->add(testMesh,glm::vec3(0,5,0))->add(testMesh, glm::vec3(5, 0, 0))->add(testMesh,glm::vec3(5,0,0))->add(testMesh, glm::vec3(5, 0, 0));
 	ghost->add(testMesh, glm::vec3(0, 0, 5), glm::quat(glm::vec3(glm::radians(45.0),0,0)));
-	ghost->add(testMesh)->add(testMesh, glm::vec3(0, 5, 0),glm::quat(1,0,0,0),secondMaterial);
+	ghost->add(testMesh)->add(testMesh, glm::vec3(0, 0, 0),glm::quat(1,0,0,0),secondMaterial);
 	scene.push_back(ghost);
 
 	setWantsKeyboardFocus(true);
@@ -131,7 +131,7 @@ void ClipPlaneTest::render()
 	glActiveTexture(GL_TEXTURE0 + bdrf);
 	glBindTexture(GL_TEXTURE_2D, bdrf_lut);
 
-	theCamera->render(theProgram);
+	((perspectiveCamera*)theCamera)->render(theProgram);
 	theProgram->use();
 
 	theProgram->setLightColor(lightColor);
