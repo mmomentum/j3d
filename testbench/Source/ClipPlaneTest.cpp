@@ -144,6 +144,10 @@ void ClipPlaneTest::render()
 	glFinish();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	/*
+	* Start mouse picking section, not needed unless mouse click
+	*/
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, pickingBuffer);
 
 	glReadBuffer(GL_COLOR_ATTACHMENT0);
@@ -161,6 +165,9 @@ void ClipPlaneTest::render()
 	lastPicked = pickedID;
 
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+	/*
+	* End mouse picking section, not needed unless mouse click
+	*/
 
 	//glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
