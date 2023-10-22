@@ -65,6 +65,9 @@ const char* sampleFragmentShader = R"V0G0N(
     uniform vec3 lightColor;
     uniform vec3 cameraPosition;
     uniform vec3 cameraDirection;
+
+    uniform ivec3 pickingColor;
+    uniform bool usePickingColor;
  
 	in vec3 normal; 
     in vec3 worldPos;
@@ -86,6 +89,13 @@ const char* sampleFragmentShader = R"V0G0N(
 
 	void main()
 	{
+        if(usePickingColor)
+        {
+            vec3 pc = vec3(float(pickingColor.x),float(pickingColor.y),float(pickingColor.z))/255.0;
+            color = vec4(pc,1);
+            return;
+        }
+
         float roughness = 0.5;
         float metalness = 0.5;
 

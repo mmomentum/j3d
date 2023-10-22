@@ -20,6 +20,7 @@ ClipPlaneTest::~ClipPlaneTest()
 
 void ClipPlaneTest::initialise()
 {
+	initPickingBuffer(getWidth(), getHeight());
 	//Use default/sample shaders
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -97,6 +98,7 @@ void ClipPlaneTest::initialise()
 	cube->rotation = { 1,0,0,0 };
 	scene.push_back(cube);*/
 
+	/*
 	meshInstance* ghost = new meshInstance;
 	ghost->scale = glm::vec3(0.3, 0.3, 0.3);
 	ghost->theMaterial = testMaterial;
@@ -104,6 +106,15 @@ void ClipPlaneTest::initialise()
 	ghost->add(testMesh, glm::vec3(0, 0, 5), glm::quat(glm::vec3(glm::radians(45.0),0,0)));
 	ghost->add(testMesh)->add(testMesh, glm::vec3(0, 0, 0),glm::quat(1,0,0,0),secondMaterial);
 	scene.push_back(ghost);
+	*/
+
+	for (int a = 0; a < 16; a++)
+	{
+		for (int b = 0; b < 16; b++)
+		{
+			scene.add(testMesh,glm::vec3(a * 2, b * 2, 0));
+		}
+	}
 
 	setWantsKeyboardFocus(true);
 }
@@ -113,8 +124,44 @@ void ClipPlaneTest::shutdown()
 	//shutdownOpenGL();
 }
 
+int lastPicked = 0;
+
 void ClipPlaneTest::render()
 {
+	glBindFramebuffer(GL_FRAMEBUFFER, pickingBuffer);
+	glViewport(0, 0, getWidth(),getHeight());
+	glClearColor(0,0,0,0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	theProgram->use();
+	((perspectiveCamera*)theCamera)->render(theProgram);
+
+	glUniform1i(theProgram->getUniformLocation("usePickingColor"), true);
+	scene.renderPicking(theProgram);
+	glUniform1i(theProgram->getUniformLocation("usePickingColor"), false);
+
+	glFlush();
+	glFinish();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, pickingBuffer);
+
+	glReadBuffer(GL_COLOR_ATTACHMENT0);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	int mx = 50, my = 50;
+
+	unsigned char data[3] = { 0,0,0 };
+	glReadPixels(mx, my, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, data);
+
+	int pickedID = data[2] + data[1] << 8 + data[0] << 16;
+	if(lastPicked != pickedID)
+		DBG("Picked: " + std::to_string((unsigned int)data[0]) + " " + std::to_string((unsigned int)data[1]) + " " + std::to_string((unsigned int)data[2]));
+
+	lastPicked = pickedID;
+
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+
 	//glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glEnable(GL_DEPTH_TEST);
@@ -131,14 +178,13 @@ void ClipPlaneTest::render()
 	glActiveTexture(GL_TEXTURE0 + bdrf);
 	glBindTexture(GL_TEXTURE_2D, bdrf_lut);
 
-	((perspectiveCamera*)theCamera)->render(theProgram);
 	theProgram->use();
+	((perspectiveCamera*)theCamera)->render(theProgram);
 
 	theProgram->setLightColor(lightColor);
 	theProgram->setLightPosition(lightPosition);
-	for (int a = 0; a < scene.size(); a++)
-		scene[a]->render(theProgram);
 
+	scene.render(theProgram);
 
 	GLenum err = glGetError();
 	if (err != GL_NO_ERROR)
