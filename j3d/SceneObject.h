@@ -18,11 +18,13 @@
 struct meshInstance
 {
     static unsigned int lastMeshInstanceID;
-    std::vector<meshInstance*> meshInstances;
+    static std::vector<meshInstance*> meshInstances;
 
     glm::vec3 position = glm::vec3(0, 0, 0);
     glm::quat rotation = glm::quat(1, 0, 0, 0);
     glm::vec3 scale = glm::vec3(1, 1, 1);
+
+    bool outlined = false;
 
     unsigned int instanceID;
 

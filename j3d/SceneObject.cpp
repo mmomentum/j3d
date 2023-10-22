@@ -11,6 +11,7 @@
 #include "SceneObject.h"
 
 unsigned int meshInstance::lastMeshInstanceID = 0;
+std::vector<meshInstance*> meshInstance::meshInstances;
 
 const void meshInstance::render(program* currentProgram,glm::mat4 modelMatrix, Material* inheritedMat)
 {
@@ -25,7 +26,17 @@ const void meshInstance::render(program* currentProgram,glm::mat4 modelMatrix, M
     currentProgram->setModelMatrix(modelMatrix);
 
     if (theMesh)
+    {
+        if (outlined)
+        {
+            glDepthMask(GL_FALSE);
+            glUniform1i(currentProgram->getUniformLocation("drawOutline"), 1);
+            theMesh->render();
+            glUniform1i(currentProgram->getUniformLocation("drawOutline"), 0);
+            glDepthMask(GL_TRUE);
+        }
         theMesh->render();
+    }
 
     for (int a = 0; a < children.size(); a++)
         children[a]->render(currentProgram, modelMatrix, theMaterial ? theMaterial : inheritedMat);

@@ -20,6 +20,8 @@ const char* sampleVertexShader = R"V0G0N(
 	layout(location = 1) in vec3 vertexNormal;
     layout(location = 2) in vec2 vertexUV;
 
+    uniform bool drawOutline;
+
     uniform mat4 modelMatrix;
 	uniform mat4 cameraView;
 	uniform mat4 cameraProjection;
@@ -37,7 +39,10 @@ const char* sampleVertexShader = R"V0G0N(
 	{
         UV = vertexUV;
 		normal = normalize((modelMatrix * vec4(vertexNormal,0.0)).xyz);
-        worldPos = (modelMatrix * vec4(vertexPosition,1.0)).xyz;
+        vec3 verPos = vertexPosition;
+        if(drawOutline)
+            verPos *= 1.1;
+        worldPos = (modelMatrix * vec4(verPos,1.0)).xyz;
 		gl_Position = cameraProjection * cameraView * vec4(worldPos,1.0);
 
         //vec3 e = normalize(vec3(modelViewMatrix * vec4(worldPos,1.0)));
@@ -53,6 +58,7 @@ const char* sampleFragmentShader = R"V0G0N(
 	#version 400 core
 
 	uniform bool isRay;
+    uniform bool drawOutline;
 
     uniform sampler2D albedo;
     uniform sampler2D normalMap; 
@@ -89,6 +95,12 @@ const char* sampleFragmentShader = R"V0G0N(
 
 	void main()
 	{
+        if(drawOutline)
+        {
+            color = vec4(0,0,1,1);
+            return;
+        }
+
         if(usePickingColor)
         {
             vec3 pc = vec3(float(pickingColor.x),float(pickingColor.y),float(pickingColor.z))/255.0;

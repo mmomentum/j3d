@@ -112,7 +112,9 @@ void ClipPlaneTest::initialise()
 	{
 		for (int b = 0; b < 16; b++)
 		{
-			scene.add(testMesh,glm::vec3(a * 2, b * 2, 0));
+			meshInstance *tmp = scene.add(testMesh,glm::vec3(a * 5, b * 5, 0));
+			if (a == 5 && b == 5)
+				tmp->outlined = true;
 		}
 	}
 
@@ -158,13 +160,23 @@ void ClipPlaneTest::render()
 	unsigned char data[3] = { 0,0,0 };
 	glReadPixels(mx, my, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, data);
 
-	int pickedID = data[2] + data[1] << 8 + data[0] << 16;
+	int pickedID = data[2] + (data[1] << 8) + (data[0] << 16);
 	if(lastPicked != pickedID)
-		DBG("Picked: " + std::to_string((unsigned int)data[0]) + " " + std::to_string((unsigned int)data[1]) + " " + std::to_string((unsigned int)data[2]));
+		DBG("Picked: " + std::to_string((unsigned int)data[0]) + " " + std::to_string((unsigned int)data[1]) + " " + std::to_string((unsigned int)data[2]) + " " + std::to_string((unsigned int)pickedID));
 
 	lastPicked = pickedID;
 
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+
+	for(int a = 0; a<meshInstance::meshInstances.size(); a++)
+	{
+		if (meshInstance::meshInstances[a]->instanceID == pickedID)
+		{
+			meshInstance::meshInstances[a]->outlined = true;
+		}
+		else
+			meshInstance::meshInstances[a]->outlined = false;
+	}
 	/*
 	* End mouse picking section, not needed unless mouse click
 	*/
