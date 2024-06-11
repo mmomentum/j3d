@@ -2,14 +2,12 @@
 
 #include <JuceHeader.h>
 
-#include "ClipPlaneTest.h"
-
 //==============================================================================
 /*
     This component lives inside our window, and this is where you should put all
     your controls and content.
 */
-class MainComponent  : public juce::Component
+class MainComponent  : public juce::OpenGLAppComponent
 {
 public:
     //==============================================================================
@@ -17,12 +15,17 @@ public:
     ~MainComponent() override;
 
     //==============================================================================
-    void paint (juce::Graphics&) override;
+    void initialise() override;
+    void shutdown() override;
+    void render() override;
+
+    //==============================================================================
+    void paint (juce::Graphics& g) override;
     void resized() override;
 
 private:
-
-    std::unique_ptr<ClipPlaneTest> clip_plane_test;
+    //==============================================================================
+    // Your private member variables go here...
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)

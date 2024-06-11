@@ -1,87 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="vYxbEi" name="testbench" projectType="guiapp" useAppConfig="0"
+<JUCERPROJECT id="AP2Hm2" name="testbench" projectType="guiapp" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
-  <MAINGROUP id="Mntsbc" name="testbench">
-    <GROUP id="{251DF059-3C54-E25A-4476-0E808217A280}" name="j3d">
-      <GROUP id="{E4FEB09F-1672-365C-18F7-F742A6C97FF8}" name="Geometries">
-        <FILE id="CgQwyj" name="GeometryCone.cpp" compile="1" resource="0"
-              file="../j3d/Geometries/GeometryCone.cpp"/>
-        <FILE id="yBdhr1" name="GeometryCone.h" compile="0" resource="0" file="../j3d/Geometries/GeometryCone.h"/>
-        <FILE id="vtrRsN" name="GeometryCube.cpp" compile="1" resource="0"
-              file="../j3d/Geometries/GeometryCube.cpp"/>
-        <FILE id="X7SIFN" name="GeometryCube.h" compile="0" resource="0" file="../j3d/Geometries/GeometryCube.h"/>
-        <FILE id="Eaoy08" name="GeometryCylinder.cpp" compile="1" resource="0"
-              file="../j3d/Geometries/GeometryCylinder.cpp"/>
-        <FILE id="wBosRj" name="GeometryCylinder.h" compile="0" resource="0"
-              file="../j3d/Geometries/GeometryCylinder.h"/>
-        <FILE id="kgzSxb" name="GeometryIcosahedron.cpp" compile="1" resource="0"
-              file="../j3d/Geometries/GeometryIcosahedron.cpp"/>
-        <FILE id="FFGN13" name="GeometryIcosahedron.h" compile="0" resource="0"
-              file="../j3d/Geometries/GeometryIcosahedron.h"/>
-        <FILE id="G9VXx3" name="GeometrySphere.cpp" compile="1" resource="0"
-              file="../j3d/Geometries/GeometrySphere.cpp"/>
-        <FILE id="fQY8Ue" name="GeometrySphere.h" compile="0" resource="0"
-              file="../j3d/Geometries/GeometrySphere.h"/>
-        <FILE id="yebVqX" name="GeometryTorus.cpp" compile="1" resource="0"
-              file="../j3d/Geometries/GeometryTorus.cpp"/>
-        <FILE id="LT2pa9" name="GeometryTorus.h" compile="0" resource="0" file="../j3d/Geometries/GeometryTorus.h"/>
+  <MAINGROUP id="WMQcEU" name="testbench">
+    <GROUP id="{98345FBA-D244-AAA9-4D31-475C30D2E4C1}" name="j3d">
+      <GROUP id="{0A293BFB-AAE6-63FE-68E4-0CA5BB740E37}" name="Camera">
+        <FILE id="ZqLWk9" name="CameraBase.cpp" compile="1" resource="0" file="../j3d/Camera/CameraBase.cpp"/>
+        <FILE id="ixMCUx" name="CameraBase.h" compile="0" resource="0" file="../j3d/Camera/CameraBase.h"/>
+        <FILE id="DrrAcQ" name="OrthographicCamera.cpp" compile="1" resource="0"
+              file="../j3d/Camera/OrthographicCamera.cpp"/>
+        <FILE id="zWq0AN" name="OrthographicCamera.h" compile="0" resource="0"
+              file="../j3d/Camera/OrthographicCamera.h"/>
+        <FILE id="zsNxbO" name="PerspectiveCamera.cpp" compile="1" resource="0"
+              file="../j3d/Camera/PerspectiveCamera.cpp"/>
+        <FILE id="wyYcia" name="PerspectiveCamera.h" compile="0" resource="0"
+              file="../j3d/Camera/PerspectiveCamera.h"/>
       </GROUP>
-      <FILE id="BeNUwq" name="Camera.cpp" compile="1" resource="0" file="../j3d/Camera.cpp"/>
-      <FILE id="xBYDJT" name="Camera.h" compile="0" resource="0" file="../j3d/Camera.h"/>
-      <FILE id="LVWkw3" name="CameraOrbitControls.cpp" compile="1" resource="0"
-            file="../j3d/CameraOrbitControls.cpp"/>
-      <FILE id="cf9ks4" name="CameraOrbitControls.h" compile="0" resource="0"
-            file="../j3d/CameraOrbitControls.h"/>
-      <FILE id="SEPbhi" name="Common.h" compile="0" resource="0" file="../j3d/Common.h"/>
-      <FILE id="iXJp9U" name="environment.cpp" compile="1" resource="0" file="../j3d/environment.cpp"/>
-      <FILE id="izrqru" name="environment.h" compile="0" resource="0" file="../j3d/environment.h"/>
-      <FILE id="rZrY7j" name="Material.cpp" compile="1" resource="0" file="../j3d/Material.cpp"/>
-      <FILE id="LEc5f9" name="Material.h" compile="0" resource="0" file="../j3d/Material.h"/>
-      <FILE id="DayrCb" name="Mesh.cpp" compile="1" resource="0" file="../j3d/Mesh.cpp"/>
-      <FILE id="NbQQMp" name="Mesh.h" compile="0" resource="0" file="../j3d/Mesh.h"/>
-      <FILE id="pmaIry" name="Model.cpp" compile="1" resource="0" file="../j3d/Model.cpp"/>
-      <FILE id="ALs8R2" name="Model.h" compile="0" resource="0" file="../j3d/Model.h"/>
-      <FILE id="OwaC3h" name="Program.cpp" compile="1" resource="0" file="../j3d/Program.cpp"/>
-      <FILE id="YnCEfL" name="Program.h" compile="0" resource="0" file="../j3d/Program.h"/>
-      <FILE id="carBtb" name="SceneObject.cpp" compile="1" resource="0" file="../j3d/SceneObject.cpp"/>
-      <FILE id="uvMQII" name="SceneObject.h" compile="0" resource="0" file="../j3d/SceneObject.h"/>
-      <FILE id="hOR2VJ" name="stb_image.h" compile="0" resource="0" file="../j3d/stb_image.h"/>
-      <FILE id="bjzV3E" name="Texture.cpp" compile="1" resource="0" file="../j3d/Texture.cpp"/>
-      <FILE id="IJHPAl" name="Texture.h" compile="0" resource="0" file="../j3d/Texture.h"/>
-      <FILE id="BctjGf" name="WavefrontObjFile.h" compile="0" resource="0"
-            file="../j3d/WavefrontObjFile.h"/>
+      <GROUP id="{B556512E-8416-A500-29DD-1131FC343A37}" name="Controls">
+        <FILE id="Ps4mBE" name="CameraControlsBase.cpp" compile="1" resource="0"
+              file="../j3d/Controls/CameraControlsBase.cpp"/>
+        <FILE id="OczMtm" name="CameraControlsBase.h" compile="0" resource="0"
+              file="../j3d/Controls/CameraControlsBase.h"/>
+        <FILE id="up4BQ0" name="CameraOrbitControls.cpp" compile="1" resource="0"
+              file="../j3d/Controls/CameraOrbitControls.cpp"/>
+        <FILE id="K3hfOd" name="CameraOrbitControls.h" compile="0" resource="0"
+              file="../j3d/Controls/CameraOrbitControls.h"/>
+        <FILE id="cfsMsi" name="CameraWalkControls.cpp" compile="1" resource="0"
+              file="../j3d/Controls/CameraWalkControls.cpp"/>
+        <FILE id="vbX8RL" name="CameraWalkControls.h" compile="0" resource="0"
+              file="../j3d/Controls/CameraWalkControls.h"/>
+      </GROUP>
+      <GROUP id="{8085E62F-8F0B-F1B9-674F-B92FFE974AEC}" name="Core">
+        <FILE id="z0rccv" name="Basic3DObject.cpp" compile="1" resource="0"
+              file="../j3d/Core/Basic3DObject.cpp"/>
+        <FILE id="LiIHJd" name="Basic3DObject.h" compile="0" resource="0" file="../j3d/Core/Basic3DObject.h"/>
+        <FILE id="LMxqKn" name="Mesh3D.cpp" compile="1" resource="0" file="../j3d/Core/Mesh3D.cpp"/>
+        <FILE id="mFhEeq" name="Mesh3D.h" compile="0" resource="0" file="../j3d/Core/Mesh3D.h"/>
+        <FILE id="MKSqhR" name="OpenGLContextManager.cpp" compile="1" resource="0"
+              file="../j3d/Core/OpenGLContextManager.cpp"/>
+        <FILE id="wnryPP" name="OpenGLContextManager.h" compile="0" resource="0"
+              file="../j3d/Core/OpenGLContextManager.h"/>
+        <FILE id="rLscbQ" name="Program.cpp" compile="1" resource="0" file="../j3d/Core/Program.cpp"/>
+        <FILE id="JVU7Hs" name="Program.h" compile="0" resource="0" file="../j3d/Core/Program.h"/>
+        <FILE id="U3Igs1" name="Texture.h" compile="0" resource="0" file="../j3d/Core/Texture.h"/>
+        <FILE id="YuHegS" name="Transform3D.cpp" compile="1" resource="0" file="../j3d/Core/Transform3D.cpp"/>
+        <FILE id="NmdEWI" name="Transform3D.h" compile="0" resource="0" file="../j3d/Core/Transform3D.h"/>
+        <FILE id="hvL37H" name="WavefrontObjFile.h" compile="0" resource="0"
+              file="../j3d/Core/WavefrontObjFile.h"/>
+      </GROUP>
+      <GROUP id="{8FE70D7D-E5E7-DF8F-E4BD-7A8378171047}" name="Geometry">
+        <FILE id="N6SaOz" name="GeometryCone.cpp" compile="1" resource="0"
+              file="../j3d/Geometry/GeometryCone.cpp"/>
+        <FILE id="XQnyaZ" name="GeometryCone.h" compile="0" resource="0" file="../j3d/Geometry/GeometryCone.h"/>
+        <FILE id="JE4Rli" name="GeometryCube.cpp" compile="1" resource="0"
+              file="../j3d/Geometry/GeometryCube.cpp"/>
+        <FILE id="tYuqor" name="GeometryCube.h" compile="0" resource="0" file="../j3d/Geometry/GeometryCube.h"/>
+        <FILE id="WVZrzd" name="GeometryCylinder.cpp" compile="1" resource="0"
+              file="../j3d/Geometry/GeometryCylinder.cpp"/>
+        <FILE id="N1T0IU" name="GeometryCylinder.h" compile="0" resource="0"
+              file="../j3d/Geometry/GeometryCylinder.h"/>
+        <FILE id="FiJY2U" name="GeometryIcosahedron.cpp" compile="1" resource="0"
+              file="../j3d/Geometry/GeometryIcosahedron.cpp"/>
+        <FILE id="jP1Tex" name="GeometryIcosahedron.h" compile="0" resource="0"
+              file="../j3d/Geometry/GeometryIcosahedron.h"/>
+        <FILE id="qrqN1F" name="GeometrySphere.cpp" compile="1" resource="0"
+              file="../j3d/Geometry/GeometrySphere.cpp"/>
+        <FILE id="orON7x" name="GeometrySphere.h" compile="0" resource="0"
+              file="../j3d/Geometry/GeometrySphere.h"/>
+        <FILE id="m7N27q" name="GeometryTorus.cpp" compile="1" resource="0"
+              file="../j3d/Geometry/GeometryTorus.cpp"/>
+        <FILE id="rSGLeZ" name="GeometryTorus.h" compile="0" resource="0" file="../j3d/Geometry/GeometryTorus.h"/>
+      </GROUP>
+      <GROUP id="{85264AB5-0E73-B704-95F1-B405CC37527C}" name="Material">
+        <FILE id="qWaxCC" name="Material.cpp" compile="1" resource="0" file="../j3d/Material/Material.cpp"/>
+        <FILE id="ZQQAYq" name="Material.h" compile="0" resource="0" file="../j3d/Material/Material.h"/>
+      </GROUP>
+      <GROUP id="{D7F2579A-F828-F85A-C961-F676FB78D886}" name="Objects">
+        <FILE id="lxuuFw" name="SpriteObject.cpp" compile="1" resource="0"
+              file="../j3d/Objects/SpriteObject.cpp"/>
+        <FILE id="oVhgnh" name="SpriteObject.h" compile="0" resource="0" file="../j3d/Objects/SpriteObject.h"/>
+      </GROUP>
+      <FILE id="lu3Yit" name="Common.h" compile="0" resource="0" file="../j3d/Common.h"/>
     </GROUP>
-    <GROUP id="{2F2A6C57-AEA2-4754-CB36-1114E889CD9B}" name="Resources">
-      <FILE id="BAaQmP" name="output_iem.png" compile="0" resource="1" file="Resources/output_iem.png"/>
-      <FILE id="ChfcZB" name="output_pmrem.png" compile="0" resource="1"
-            file="Resources/output_pmrem.png"/>
-      <FILE id="Gv0qOG" name="brick_albedo.png" compile="0" resource="1"
-            file="Resources/brick_albedo.png"/>
-      <FILE id="mCvN1W" name="skybox.jpg" compile="0" resource="1" file="Resources/skybox.jpg"/>
-      <FILE id="Zea2s9" name="goldmatcap.jpg" compile="0" resource="1" file="Resources/goldmatcap.jpg"/>
-      <FILE id="phwdat" name="head.obj" compile="0" resource="1" file="Resources/head.obj"/>
-      <FILE id="GAeu6K" name="map.png" compile="0" resource="1" file="Resources/map.png"/>
-    </GROUP>
-    <GROUP id="{092F2A82-615B-EE96-9D11-C8DD9FF90753}" name="Source">
-      <FILE id="ZSmMY4" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
-      <FILE id="pWpCpK" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
-      <FILE id="XN2rVt" name="MainComponent.cpp" compile="1" resource="0"
+    <GROUP id="{2FA761A2-7749-0363-8FEB-7264AC9517BD}" name="Source">
+      <FILE id="a1ppz9" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="AwGlqZ" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="Ue4aEr" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
     </GROUP>
-    <FILE id="mHQrpY" name="ClipPlaneTest.cpp" compile="1" resource="0"
-          file="Source/ClipPlaneTest.cpp"/>
-    <FILE id="ikluJa" name="ClipPlaneTest.h" compile="0" resource="0" file="Source/ClipPlaneTest.h"/>
-    <FILE id="ZQejbQ" name="TestSceneBase.cpp" compile="1" resource="0"
-          file="Source/TestSceneBase.cpp"/>
-    <FILE id="dLj7jx" name="TestSceneBase.h" compile="0" resource="0" file="Source/TestSceneBase.h"/>
   </MAINGROUP>
+  <MODULES>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
   <EXPORTFORMATS>
-    <VS2022 targetFolder="Builds/MomentumExporter">
+    <VS2022 targetFolder="Builds/VisualStudio2022">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="testbench" headerPath="D:\programming\cpp\plugins\lib"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="testbench" headerPath="D:\programming\cpp\plugins\lib\glm"/>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="testbench" headerPath="D:\programming\cpp\j3d\lib\glm\glm"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="testbench" headerPath="D:\programming\cpp\j3d\lib\glm\glm"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
@@ -93,44 +115,5 @@
         <MODULEPATH id="juce_opengl" path="../../JUCE/modules"/>
       </MODULEPATHS>
     </VS2022>
-    <VS2022 targetFolder="Builds/DrenExporter">
-      <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" headerPath="C:\Program Files\CodeBlocks\MinGW\include\GL&#10;C:\Program Files\CodeBlocks\MinGW\include\glm&#10;"/>
-        <CONFIGURATION isDebug="0" name="Release" headerPath="C:\Program Files\CodeBlocks\MinGW\include\GL&#10;C:\Program Files\CodeBlocks\MinGW\include\glm&#10;"/>
-      </CONFIGURATIONS>
-      <MODULEPATHS>
-        <MODULEPATH id="juce_core" path="D:\programming\cpp\JUCE\modules"/>
-        <MODULEPATH id="juce_data_structures" path="D:\programming\cpp\JUCE\modules"/>
-        <MODULEPATH id="juce_events" path="D:\programming\cpp\JUCE\modules"/>
-        <MODULEPATH id="juce_graphics" path="D:\programming\cpp\JUCE\modules"/>
-        <MODULEPATH id="juce_gui_basics" path="D:\programming\cpp\JUCE\modules"/>
-        <MODULEPATH id="juce_gui_extra" path="D:\programming\cpp\JUCE\modules"/>
-        <MODULEPATH id="juce_opengl" path="D:\programming\cpp\JUCE\modules"/>
-      </MODULEPATHS>
-    </VS2022>
-    <CODEBLOCKS_WINDOWS extraCompilerFlags="-Wa,-mbig-obj">
-      <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" headerPath="C:\Program Files\CodeBlocks\MinGW\include\GL&#10;C:\Program Files\CodeBlocks\MinGW\include\glm&#10;"/>
-        <CONFIGURATION isDebug="0" name="Release" headerPath="C:\Program Files\CodeBlocks\MinGW\include\GL&#10;C:\Program Files\CodeBlocks\MinGW\include\glm&#10;"/>
-      </CONFIGURATIONS>
-      <MODULEPATHS>
-        <MODULEPATH id="juce_core" path="D:\programming\cpp\JUCE\modules"/>
-        <MODULEPATH id="juce_data_structures" path="D:\programming\cpp\JUCE\modules"/>
-        <MODULEPATH id="juce_events" path="D:\programming\cpp\JUCE\modules"/>
-        <MODULEPATH id="juce_graphics" path="D:\programming\cpp\JUCE\modules"/>
-        <MODULEPATH id="juce_gui_basics" path="D:\programming\cpp\JUCE\modules"/>
-        <MODULEPATH id="juce_gui_extra" path="D:\programming\cpp\JUCE\modules"/>
-        <MODULEPATH id="juce_opengl" path="D:\programming\cpp\JUCE\modules"/>
-      </MODULEPATHS>
-    </CODEBLOCKS_WINDOWS>
   </EXPORTFORMATS>
-  <MODULES>
-    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
-    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
-    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
-    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
-    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
-    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
-    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
-  </MODULES>
 </JUCERPROJECT>
